@@ -1,0 +1,15 @@
+
+.gradle/
+.idea/
+build/
+
+data/
+data-old/
+*.db
+Calculator.*
+
+**/logs/
+.settings
+bin
+.project*
+.classpath
