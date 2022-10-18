@@ -1,5 +1,6 @@
 package code;
 
+import code.calc.Model;
 import code.model.Detail;
 import code.model.Order;
 import code.model.Work;
@@ -9,7 +10,13 @@ import code.utils.Handler;
 import code.utils.Parser;
 import code.check.Result;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.nio.file.Files.readString;
+import static java.nio.file.Files.writeString;
 
 public class App {
 
@@ -22,29 +29,25 @@ public class App {
         Work work;
         List<Work> works;
         Result result;
+        Model model;
 
-//        order = Parser.getOrderFromFile("../data/2 (110).csv");
+//        Проверка модели
+//        model = Parser.makeModel("model-all.csv", "model-only.csv");
 //        orders = Parser.getOrdersFromDirectory("../data/");
-//
-//        List<Result> list = Checker.checkOrders(orders);
+//        List<Result> list = Checker.checkOrders(model, orders);
 //        Checker.showResults(list);
 
-
-//        int n = 10;
-//        System.out.println(n + "   " + Handler.countVariants(n) + "   " + Handler.factorial(n));
+//        Handler.makeModelOnly();
 
 //        order = Parser.getOrderFromFile("../data/2 (110).csv");
-//        System.out.println(OrderService.isOrderContainsDetail(order, "СТЕКЛО ДВЕРИ"));
-//        System.out.println(OrderService.isOrderContainsAll(order, List.of("СТЕКЛО ДВЕРИ", "АБСОРБЕР БАМПЕРА")));
-//        System.out.println(OrderService.isOrderContainsDetail(order, "СТЕКЛО ДВРИ"));
-//        System.out.println(OrderService.isOrderContainsAll(order, List.of("СТКЛО ДВЕРИ", "АБСОРБЕР БМПЕРА")));
-
 //        orders = Parser.getOrdersFromDirectory("../data/");
-//        OrderService.showOrders(OrderService.getOrdersContainsDetail(orders, "СТЕКЛО ДВЕРИ"));
-//        OrderService.showOrders(OrderService.getOrdersContainsDetail(orders, "БА"));
-//        OrderService.showOrders(OrderService.getOrdersContainsAll(orders, List.of("СТЕКЛО ДВЕРИ", "РУЧКА ДВЕРИ")));
-//        OrderService.showOrders(OrderService.getOrdersContainsAll(orders, List.of("ОБЛИЦОВКА БАМПЕРА", "АБСОРБЕР БАМПЕРА")));
+
 
     }
 
 }
+
+//    Создание exe из jar
+//    https://javarush.ru/groups/posts/1352-kak-sozdatjh-ispolnjaemihy-jar-v-intellij-idea--how-to-create-jar-in-idea
+//    Меню : Build Artifacts
+//    https://genuinecoder.com/online-converter/jar-to-exe/

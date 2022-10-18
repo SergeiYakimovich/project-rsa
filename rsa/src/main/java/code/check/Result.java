@@ -15,8 +15,8 @@ public class Result {
 
     @Override
     public String toString() {
-        return "Result {" + " Модель=" + String.format("%.1f",hours) + "   Эталон=" + String.format("%.1f", expected) +
-                "   разница=" + String.format("%.1f", diff) + "   в%=" + String.format("%.1f", diffInPercent) +
-                "   з/н=" + orderName + " }";
+        return "Result {" + " Model=" + String.format("%.1f",hours) + "   standard=" + String.format("%.1f", expected) +
+                "   difference=" + String.format("%.1f", diff) + "   in%=" + String.format("%.1f", diffInPercent) +
+                "   order=" + orderName + " }";
     }
 }

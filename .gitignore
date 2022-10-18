@@ -2,11 +2,11 @@
 .gradle/
 .idea/
 build/
+out/
 
 data/
-data-old/
+data-main/
 *.db
-Calculator.*
 
 **/logs/
 .settings

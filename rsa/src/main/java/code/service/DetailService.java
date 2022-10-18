@@ -2,6 +2,7 @@ package code.service;
 
 import code.model.Detail;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class DetailService {
@@ -30,4 +31,20 @@ public class DetailService {
         }
     }
 
+    public static Detail makeDetail(String[] mas) {
+        Detail detail = new Detail();
+        try {
+            detail.setNumber(mas[0]);
+            detail.setName(mas[1]);
+            detail.setCount(Double.parseDouble(mas[2]));
+            if(mas[3] == "") {
+                detail.setSum(0.0);
+            } else {
+                detail.setSum(Double.parseDouble(mas[3]));
+            }
+        } catch (Exception e) {
+            System.out.println("Ошибка в данных " + Arrays.toString(mas));
+        }
+        return detail;
+    }
 }

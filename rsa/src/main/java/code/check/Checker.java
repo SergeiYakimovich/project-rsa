@@ -1,6 +1,7 @@
 package code.check;
 
 import code.calc.Calculator;
+import code.calc.Model;
 import code.model.Order;
 
 import java.util.ArrayList;
@@ -9,9 +10,9 @@ import java.util.stream.Collectors;
 
 public class Checker {
 
-    public static Result checkOneOrder(Order order) {
+    public static Result checkOneOrder(Model model, Order order) {
         Result result = new Result();
-        Double hours = Calculator.calculate(order);
+        Double hours = Calculator.calculate(model, order);
         Double expected = order.getWorksCount();
         result.setHours(hours);
         result.setExpected(expected);
@@ -21,10 +22,10 @@ public class Checker {
         return result;
     }
 
-    public static List<Result> checkOrders(List<Order> orders) {
+    public static List<Result> checkOrders(Model model, List<Order> orders) {
         List<Result> list = new ArrayList<>();
         for(Order order : orders) {
-            Result result = checkOneOrder(order);
+            Result result = checkOneOrder(model, order);
             list.add(result);
         }
         return list.stream()
@@ -38,11 +39,12 @@ public class Checker {
 //            System.out.println(list.get(i).toString());
 //        }
 
-        System.out.println("Проверено на " + list.size() + " з/н");
-        System.out.println("Средняя разница = " + String.format("%.1f", countAvrDiff(list)));
-        System.out.println("Средняя разница в % = " + String.format("%.1f", countAvrDiffInPercent(list)));
+        System.out.println("Checked on " + list.size() + " orders");
+//        System.out.println("Average difference = " + String.format("%.1f", countAvrDiff(list)));
+        System.out.println("Average difference in % = " + String.format("%.1f", countAvrDiffInPercent(list)));
+        System.out.println("Median difference in % = " + String.format("%.1f", list.get(list.size() / 2).getDiffInPercent()));
 
-        System.out.println("Максимальное отклонение");
+        System.out.println("Maximum deviation :");
         int n = list.size() > 5 ? 5 : list.size();
         for(int i = 0; i < n; i++) {
             System.out.println(list.get(i).toString());

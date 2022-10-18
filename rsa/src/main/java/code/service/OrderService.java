@@ -3,7 +3,9 @@ package code.service;
 import code.model.Detail;
 import code.model.Order;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class OrderService {
@@ -42,4 +44,14 @@ public class OrderService {
         }
     }
 
+    public static Order makeOrder(String str) {
+        Order order = new Order();
+        order.setDetails(new ArrayList<>());
+        order.setWorks(new ArrayList<>());
+        order.setCar("VW");
+        order.setCompany("Unknown");
+        String[] mas = str.split(Pattern.quote("\\"));
+        order.setName(mas[mas.length - 1]);
+        return order;
+    }
 }
