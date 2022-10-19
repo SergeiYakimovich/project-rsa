@@ -1,5 +1,6 @@
 package code;
 
+import code.calc.Calculator;
 import code.calc.Model;
 import code.model.Detail;
 import code.model.Order;
@@ -32,12 +33,12 @@ public class App {
         Model model;
 
 //        Проверка модели
-//        model = Parser.makeModel("model-all.csv", "model-only.csv");
-//        orders = Parser.getOrdersFromDirectory("../data/");
-//        List<Result> list = Checker.checkOrders(model, orders);
-//        Checker.showResults(list);
+        model = Parser.makeModel("model-single.csv", "model-set.csv");
+        orders = Parser.getOrdersFromDirectory("../data/80");
+        List<Result> list = Checker.checkOrders(model, orders, Calculator.CheckType.SINGLE);
+        Checker.showResults(list);
 
-//        Handler.makeModelOnly();
+//        Handler.makeModelSet();
 
 //        order = Parser.getOrderFromFile("../data/2 (110).csv");
 //        orders = Parser.getOrdersFromDirectory("../data/");

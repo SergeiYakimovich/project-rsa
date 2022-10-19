@@ -39,11 +39,11 @@ public class Parser {
         }
         return detailsList;
     }
-    public static Model makeModel(String fileAll, String fileOnly) throws Exception {
+    public static Model makeModel(String fileSingle, String fileSet) throws Exception {
         Model model = new Model();
-        model.setName(fileAll + "+" + fileOnly);
-        model.setListAll(getModel(fileAll));
-        model.setListOnly(getModel(fileOnly));
+        model.setName(fileSingle + "+" + fileSet);
+        model.setListSingle(getModel(fileSingle));
+        model.setListSet(getModel(fileSet));
         System.out.println(model.toString());
         return model;
     }
@@ -117,9 +117,13 @@ public class Parser {
         File[] files = new File(dir).listFiles();
         for(File file : files) {
             String s = file.toString();
-            Order order = getOrderFromFile(file.toString());
-            if (order != null && !order.isOrderEmpty()) {
-                orders.add(order);
+            if(file.isDirectory()) {
+                orders.addAll(getOrdersFromDirectory(s));
+            } else {
+                Order order = getOrderFromFile(file.toString());
+                if (order != null && !order.isOrderEmpty()) {
+                    orders.add(order);
+                }
             }
         }
         System.out.println("load " + orders.size() + " orders from " + files.length);

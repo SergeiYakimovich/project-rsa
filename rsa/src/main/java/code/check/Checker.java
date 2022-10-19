@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 
 public class Checker {
 
-    public static Result checkOneOrder(Model model, Order order) {
+    public static Result checkOneOrder(Model model, Order order, Calculator.CheckType type) {
         Result result = new Result();
-        Double hours = Calculator.calculate(model, order);
+        Double hours = Calculator.calculate(model, order, type);
         Double expected = order.getWorksCount();
         result.setHours(hours);
         result.setExpected(expected);
@@ -22,10 +22,10 @@ public class Checker {
         return result;
     }
 
-    public static List<Result> checkOrders(Model model, List<Order> orders) {
+    public static List<Result> checkOrders(Model model, List<Order> orders, Calculator.CheckType type) {
         List<Result> list = new ArrayList<>();
         for(Order order : orders) {
-            Result result = checkOneOrder(model, order);
+            Result result = checkOneOrder(model, order, type);
             list.add(result);
         }
         return list.stream()

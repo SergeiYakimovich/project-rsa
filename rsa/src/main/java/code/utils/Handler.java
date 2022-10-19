@@ -18,7 +18,7 @@ public class Handler {
         System.out.println();
     }
 
-    public static void makeModelAll() throws Exception{
+    public static void makeModelSingle() throws Exception{
         List<Order> orders;
         String text = "";
         orders = Parser.getOrdersFromDirectory("../data/");
@@ -28,13 +28,13 @@ public class Handler {
         for(Order nextOrder : orders) {
             text += nextOrder.getDetails().get(0).getName()
                     + ";" + nextOrder.getWorksCount()
-                    + "   " + nextOrder.getName()
+//                    + "   " + nextOrder.getName()
                     + "\n";
         }
-        writeString(Paths.get("all-out.txt"), text.substring(0, text.length() - 1), StandardCharsets.UTF_8);
+        writeString(Paths.get("out-single.txt"), text.substring(0, text.length() - 1), StandardCharsets.UTF_8);
     }
 
-    public static void makeModelOnly() throws Exception{
+    public static void makeModelSet() throws Exception{
         List<Order> orders = Parser.getOrdersFromDirectory("../data/");
         List<List<String>> detailsList = Parser.getDetailsFromFile("details.csv");
         String text = "";
@@ -44,7 +44,7 @@ public class Handler {
                     .collect(Collectors.joining(";"));
             text += str + ";" + hours + "\n";
         }
-        writeString(Paths.get("out-only.txt"), text.substring(0, text.length() - 1), StandardCharsets.UTF_8);
+        writeString(Paths.get("out-set.txt"), text.substring(0, text.length() - 1), StandardCharsets.UTF_8);
     }
 
     public static Double countAverage(List<Order> orders, List<String> detailNames) {

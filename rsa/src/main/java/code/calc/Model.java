@@ -12,14 +12,14 @@ public class Model {
 
     private String name;
 
-    List<Map<List<String>, Double>> listAll;
+    List<Map<List<String>, Double>> listSingle;
 
-    List<Map<List<String>, Double>> listOnly;
+    List<Map<List<String>, Double>> listSet;
 
     @Override
     public String toString() {
-        return "Model { " + "name=" + name + "   listAll=" + listAll.size()
-                + "   listOnly=" + listOnly.size() + " }\n";
+        return "Model { " + "name=" + name + "   listSingle=" + listSingle.size()
+                + "   listSet=" + listSet.size() + " }\n";
     }
 
 }
