@@ -2,7 +2,7 @@ package code.check;
 
 import code.calc.Calculator;
 import code.calc.Model;
-import code.model.Order;
+import code.element.Order;
 
 import java.util.ArrayList;
 import java.util.List;

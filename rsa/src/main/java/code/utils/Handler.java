@@ -1,12 +1,13 @@
 package code.utils;
 
-import code.model.Detail;
-import code.model.Order;
+import code.App;
+import code.element.Order;
+import code.parse.DetailsParser;
+import code.parse.OrderParser;
 import code.service.OrderService;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,10 +19,10 @@ public class Handler {
         System.out.println();
     }
 
-    public static void makeModelSingle() throws Exception{
+    public static void makeModelSingle(String dir) throws Exception{
         List<Order> orders;
         String text = "";
-        orders = Parser.getOrdersFromDirectory("../data/");
+        orders = OrderParser.getOrdersFromDirectory(dir);
         orders = orders.stream()
                 .sorted((o1, o2) -> o1.getDetails().get(0).getName().compareTo(o2.getDetails().get(0).getName()))
                 .collect(Collectors.toList());
@@ -31,12 +32,12 @@ public class Handler {
 //                    + "   " + nextOrder.getName()
                     + "\n";
         }
-        writeString(Paths.get("out-single.txt"), text.substring(0, text.length() - 1), StandardCharsets.UTF_8);
+        writeString(Paths.get(App.MODEL_DIR + "out-single.txt"), text.substring(0, text.length() - 1), StandardCharsets.UTF_8);
     }
 
-    public static void makeModelSet() throws Exception{
-        List<Order> orders = Parser.getOrdersFromDirectory("../data/");
-        List<List<String>> detailsList = Parser.getDetailsFromFile("details.csv");
+    public static void makeModelSet(String dir, String fileWithDetails) throws Exception{
+        List<Order> orders = OrderParser.getOrdersFromDirectory(dir);
+        List<List<String>> detailsList = DetailsParser.getDetailsFromFile(App.MODEL_DIR + fileWithDetails);
         String text = "";
         for(List<String> details : detailsList) {
             Double hours = countAverage(orders, details);
@@ -44,7 +45,7 @@ public class Handler {
                     .collect(Collectors.joining(";"));
             text += str + ";" + hours + "\n";
         }
-        writeString(Paths.get("out-set.txt"), text.substring(0, text.length() - 1), StandardCharsets.UTF_8);
+        writeString(Paths.get(App.MODEL_DIR + "out-set.txt"), text.substring(0, text.length() - 1), StandardCharsets.UTF_8);
     }
 
     public static Double countAverage(List<Order> orders, List<String> detailNames) {

@@ -1,7 +1,6 @@
 package code.service;
 
-import code.model.Detail;
-import code.model.Order;
+import code.element.Order;
 
 import java.util.ArrayList;
 import java.util.List;

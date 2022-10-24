@@ -1,6 +1,6 @@
 package code.service;
 
-import code.model.Work;
+import code.element.Work;
 
 import java.util.Arrays;
 

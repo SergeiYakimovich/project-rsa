@@ -1,6 +1,6 @@
 package code.calc;
 
-import code.model.Order;
+import code.element.Order;
 import code.service.OrderService;
 
 import java.util.List;

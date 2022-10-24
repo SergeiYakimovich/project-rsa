@@ -1,6 +1,6 @@
 package code.service;
 
-import code.model.Detail;
+import code.element.Detail;
 
 import java.util.Arrays;
 import java.util.List;

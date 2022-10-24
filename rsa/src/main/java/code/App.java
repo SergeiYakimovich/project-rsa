@@ -2,24 +2,25 @@ package code;
 
 import code.calc.Calculator;
 import code.calc.Model;
-import code.model.Detail;
-import code.model.Order;
-import code.model.Work;
+import code.element.Detail;
+import code.element.Order;
+import code.element.Work;
 import code.check.Checker;
-import code.service.OrderService;
-import code.utils.Handler;
-import code.utils.Parser;
+import code.parse.ModelParser;
+import code.parse.OrderParser;
 import code.check.Result;
+import code.utils.Handler;
 
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.nio.file.Files.readString;
 import static java.nio.file.Files.writeString;
 
 public class App {
+    public final static String ORDERS_DIR = "../data/";
+    public final static String MODEL_DIR = "../model/";
+    public final static String FILE_SINGLE = "single.csv";
+    public final static String FILE_SET = "set.csv";
 
     public static void main(String[] args) throws Exception {
         System.setOut(new java.io.PrintStream(System.out, true, "UTF-8"));
@@ -33,16 +34,15 @@ public class App {
         Model model;
 
 //        Проверка модели
-        model = Parser.makeModel("model-single.csv", "model-set.csv");
-        orders = Parser.getOrdersFromDirectory("../data/80");
+        model = ModelParser.makeModel(MODEL_DIR + FILE_SINGLE, MODEL_DIR + FILE_SET);
+        orders = OrderParser.getOrdersFromDirectory(ORDERS_DIR + "80");
         List<Result> list = Checker.checkOrders(model, orders, Calculator.CheckType.SINGLE);
         Checker.showResults(list);
 
-//        Handler.makeModelSet();
+//        Handler.makeModelSet(ORDERS_DIR, DATA_DIR + "details.csv");
 
 //        order = Parser.getOrderFromFile("../data/2 (110).csv");
-//        orders = Parser.getOrdersFromDirectory("../data/");
-
+//        orders = Parser.getOrdersFromDirectory(ORDERS_DIR);
 
     }
 
