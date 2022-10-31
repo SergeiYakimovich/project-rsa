@@ -17,6 +17,7 @@ public class DetailsParser {
             text = readString(Paths.get(fileName), StandardCharsets.UTF_8);
         } catch (Exception e) {
             System.out.println("!!! Ошибка чтения из файла " + fileName);
+            System.out.println("!!! " + e.getMessage());
             return null;
         }
         String[] stroki = text.split("\n");

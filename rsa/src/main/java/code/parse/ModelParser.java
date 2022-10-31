@@ -16,14 +16,14 @@ public class ModelParser {
     public static Model makeModel(String fileSingle, String fileSet) throws Exception {
         Model model = new Model();
         model.setName(fileSingle + "+" + fileSet);
-        model.setListSingle(getModelFromFile(fileSingle));
-        model.setListSet(getModelFromFile(fileSet));
+        model.setSingleDetails(getModelFromFile(fileSingle));
+        model.setSetDetails(getModelFromFile(fileSet));
         System.out.println(model.toString());
         return model;
     }
 
-    public static List<Map<List<String>,Double>> getModelFromFile(String file) throws Exception {
-        List<Map<List<String>,Double>> list = new ArrayList<>();
+    public static Map<List<String>,Double> getModelFromFile(String file) throws Exception {
+        Map<List<String>,Double> result = new HashMap<>();
         String text = "";
         try {
             text = readString(Paths.get(file), StandardCharsets.UTF_8);
@@ -34,7 +34,6 @@ public class ModelParser {
         String[] stroki = text.split("\n");
         for(int i = 0; i < stroki.length; i++) {
             String[] mas = stroki[i].split(";");
-            Map<List<String>, Double> map = new HashMap<>();
             List<String> detailNames = new ArrayList<>();
             if(mas.length > 1) {
                 for(int j = 0; j < mas.length - 1; j++) {
@@ -49,10 +48,9 @@ public class ModelParser {
             } catch (Exception e) {
                 System.out.println("Ошибка данных в файле " + file + "   " + String.join(";", mas));
             }
-            map.put(detailNames, hours);
-            list.add(map);
+            result.put(detailNames, hours);
         }
-        return list;
+        return result;
     }
 
 }

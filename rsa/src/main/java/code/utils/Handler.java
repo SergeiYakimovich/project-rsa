@@ -8,9 +8,12 @@ import code.service.OrderService;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static code.App.FILE_SINGLE;
+import static code.App.MODEL_DIR;
 import static java.nio.file.Files.writeString;
 
 public class Handler {
@@ -32,12 +35,12 @@ public class Handler {
 //                    + "   " + nextOrder.getName()
                     + "\n";
         }
-        writeString(Paths.get(App.MODEL_DIR + "out-single.txt"), text.substring(0, text.length() - 1), StandardCharsets.UTF_8);
+        writeString(Paths.get(MODEL_DIR + "out-single.txt"), text.substring(0, text.length() - 1), StandardCharsets.UTF_8);
     }
 
     public static void makeModelSet(String dir, String fileWithDetails) throws Exception{
         List<Order> orders = OrderParser.getOrdersFromDirectory(dir);
-        List<List<String>> detailsList = DetailsParser.getDetailsFromFile(App.MODEL_DIR + fileWithDetails);
+        List<List<String>> detailsList = DetailsParser.getDetailsFromFile(MODEL_DIR + fileWithDetails);
         String text = "";
         for(List<String> details : detailsList) {
             Double hours = countAverage(orders, details);
@@ -45,7 +48,7 @@ public class Handler {
                     .collect(Collectors.joining(";"));
             text += str + ";" + hours + "\n";
         }
-        writeString(Paths.get(App.MODEL_DIR + "out-set.txt"), text.substring(0, text.length() - 1), StandardCharsets.UTF_8);
+        writeString(Paths.get(MODEL_DIR + "out-set.txt"), text.substring(0, text.length() - 1), StandardCharsets.UTF_8);
     }
 
     public static Double countAverage(List<Order> orders, List<String> detailNames) {
@@ -76,6 +79,27 @@ public class Handler {
         } else {
             return n * factorial(n - 1);
         }
+    }
+
+    public static void checkDetailsLists() throws Exception {
+        List<List<String>> details_all = DetailsParser.getDetailsFromFile(MODEL_DIR + "details_all.txt");
+        List<List<String>> details_80 = DetailsParser.getDetailsFromFile(MODEL_DIR + FILE_SINGLE);
+        List<String> det_all = new ArrayList<>();
+        for(List<String> item : details_all) {
+            det_all.add(item.get(2));
+        }
+        List<String> det_80 = new ArrayList<>();
+        for(List<String> item : details_80) {
+            det_80.add(item.get(0));
+        }
+        det_all.removeAll(det_80);
+        det_all=det_all.stream().sorted().collect(Collectors.toList());
+        String text = "";
+        for(String str : det_all) {
+            text += str + "\n";
+        }
+        writeString(Paths.get(MODEL_DIR + "det-new.txt"), text.substring(0, text.length() - 1), StandardCharsets.UTF_8);
+
     }
 
 }

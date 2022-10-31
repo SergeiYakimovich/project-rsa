@@ -15,10 +15,9 @@ public class Calculator {
 
     public static Double calculate(Model model, Order order, CheckType type) {
         if(type == CheckType.ALL || type == CheckType.SET) {
-            for(Map<List<String>, Double> map : model.getListSet()) {
-                Map.Entry<List<String>, Double> entry = map.entrySet().iterator().next();
-                List<String> detailNames = entry.getKey();
-                Double hours = entry.getValue();
+            for(Map.Entry<List<String>, Double> item : model.getSetDetails().entrySet()) {
+                List<String> detailNames = item.getKey();
+                Double hours = item.getValue();
                 if(OrderService.isOrderContainsAll(order, detailNames)) {
                     return hours;
                 }
@@ -26,10 +25,9 @@ public class Calculator {
         }
         Double result = 0.0;
         if(type == CheckType.ALL || type == CheckType.SINGLE) {
-            for(Map<List<String>, Double> map : model.getListSingle()) {
-                Map.Entry<List<String>, Double> entry = map.entrySet().iterator().next();
-                List<String> detailNames = entry.getKey();
-                Double hours = entry.getValue();
+            for(Map.Entry<List<String>, Double> item : model.getSingleDetails().entrySet()) {
+                List<String> detailNames = item.getKey();
+                Double hours = item.getValue();
                 if(OrderService.isOrderContainsAll(order, detailNames)) {
                     result += hours;
                 }

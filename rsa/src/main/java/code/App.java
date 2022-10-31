@@ -6,12 +6,17 @@ import code.element.Detail;
 import code.element.Order;
 import code.element.Work;
 import code.check.Checker;
+import code.parse.DetailsParser;
 import code.parse.ModelParser;
 import code.parse.OrderParser;
 import code.check.Result;
 import code.utils.Handler;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.nio.file.Files.readString;
 import static java.nio.file.Files.writeString;
@@ -38,6 +43,7 @@ public class App {
         orders = OrderParser.getOrdersFromDirectory(ORDERS_DIR + "80");
         List<Result> list = Checker.checkOrders(model, orders, Calculator.CheckType.SINGLE);
         Checker.showResults(list);
+
 
 //        Handler.makeModelSet(ORDERS_DIR, DATA_DIR + "details.csv");
 
