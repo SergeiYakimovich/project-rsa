@@ -11,7 +11,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
-
 import java.util.List;
 
 @Configuration
@@ -32,22 +31,24 @@ public class App {
         List<Detail> details;
         Work work;
         List<Work> works;
-        
+
 
 //        order = Parser.getOrderFromFile("../data/2 (110).csv");
-        orders = Parser.getOrdersFromDirectory("../data/");
+        orders = Parser.getOrdersFromDirectory("../data/150/");
 
         orderRepository.save(orders.get(0));
         orderRepository.save(orders.get(1));
         orderRepository.save(orders.get(2));
 
         orders = orderRepository.findAll();
-        details = detailRepository.findAllByOrderName("data\\2 (100).csv");
-        works = workRepository.findAllByOrderName("data\\2 (100).csv");
+        details = detailRepository.findAllByOrderName("..\\data\\150\\2 (100).csv");
+        works = workRepository.findAllByOrderId(2l);
 
         order = orders.get(0);
         detail = details.get(0);
         work = works.get(0);
+//        detail = order.getDetails().get(0);
+//        work = order.getWorks().get(0);
 
         System.out.println(order.toString());
         System.out.println(detail.toString());
