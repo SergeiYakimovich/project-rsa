@@ -10,12 +10,15 @@ import code.parse.DetailsParser;
 import code.parse.ModelParser;
 import code.parse.OrderParser;
 import code.check.Result;
+import code.utils.DetailUtils;
 import code.utils.Handler;
+import code.utils.ModelUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.nio.file.Files.readString;
@@ -25,7 +28,8 @@ public class App {
     public final static String ORDERS_DIR = "../data/";
     public final static String MODEL_DIR = "../model/";
     public final static String FILE_SINGLE = "single.csv";
-    public final static String FILE_SET = "set.csv";
+    public final static String FILE_SET = "out-set.txt";
+//    public final static String FILE_SET = "set.csv";
 
     public static void main(String[] args) throws Exception {
         System.setOut(new java.io.PrintStream(System.out, true, "UTF-8"));
@@ -40,15 +44,16 @@ public class App {
 
 //        Проверка модели
         model = ModelParser.makeModel(MODEL_DIR + FILE_SINGLE, MODEL_DIR + FILE_SET);
-        orders = OrderParser.getOrdersFromDirectory(ORDERS_DIR + "80");
-        List<Result> list = Checker.checkOrders(model, orders, Calculator.CheckType.SINGLE);
-        Checker.showResults(list);
+        orders = OrderParser.getOrdersFromDirectory(ORDERS_DIR);
+        List<Result> list = Checker.checkOrders(model, orders, Calculator.CheckType.ALL);
+        Checker.showResults(list, 100);
+
+//        Map<String, Integer> det_Uniq = DetailUtils.countUniqDetails();
+//        DetailUtils.makeSetsOfDetails(det_Uniq, 5);
 
 
-//        Handler.makeModelSet(ORDERS_DIR, DATA_DIR + "details.csv");
+//        ModelUtils.makeModelUniqSets(ORDERS_DIR);
 
-//        order = Parser.getOrderFromFile("../data/2 (110).csv");
-//        orders = Parser.getOrdersFromDirectory(ORDERS_DIR);
 
     }
 

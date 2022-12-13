@@ -8,6 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * checkOneOrder() - проверка одного з/н по модели
+ * checkOrders() - проверка списка з/н по модели
+ * showResults() - вывод результата проверки
+ */
 public class Checker {
 
     public static Result checkOneOrder(Model model, Order order, Calculator.CheckType type) {
@@ -33,7 +38,7 @@ public class Checker {
                 .collect(Collectors.toList());
     }
 
-    public static void showResults(List<Result> list) {
+    public static void showResults(List<Result> list, int number) {
 
 //        for(int i = 0; i < list.size(); i++) {
 //            System.out.println(list.get(i).toString());
@@ -45,10 +50,15 @@ public class Checker {
         System.out.println("Median difference in % = " + String.format("%.1f", list.get(list.size() / 2).getDiffInPercent()));
 
         System.out.println("Maximum deviation :");
-        int n = list.size() > 5 ? 5 : list.size();
+        int n = list.size() > number ? number : list.size();
         for(int i = 0; i < n; i++) {
             System.out.println(list.get(i).toString());
         }
+
+//        System.out.println("Min deviation :");
+//        for(int i = 0; i < n; i++) {
+//            System.out.println(list.get(list.size() - 1 - i).toString());
+//        }
     }
 
     private static Double countAvrDiffInPercent(List<Result> list) {

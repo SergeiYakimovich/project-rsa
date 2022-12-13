@@ -7,6 +7,7 @@ out/
 data/
 infa/
 *.db
+*.log
 
 **/logs/
 .settings

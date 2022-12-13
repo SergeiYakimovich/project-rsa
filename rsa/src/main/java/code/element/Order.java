@@ -24,6 +24,7 @@ public class Order {
                 " }\n";
     }
 
+    // стоимость всех деталей
     public Double getDetailsSum() {
         Double result = 0.0;
         for(Detail detail : this.details) {
@@ -32,6 +33,7 @@ public class Order {
         return result;
     }
 
+    // количество деталей
     public Double getDetailsCount() {
         Double result = 0.0;
         for(Detail detail : this.details) {
@@ -40,6 +42,7 @@ public class Order {
         return result;
     }
 
+    // количество (сумма) н/ч
     public Double getWorksCount() {
         Double result = 0.0;
         for(Work work : this.works) {

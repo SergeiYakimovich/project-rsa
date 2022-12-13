@@ -8,6 +8,10 @@ import java.util.List;
 
 import static java.nio.file.Files.readString;
 
+/**
+ * getDetailsFromFile() - получить из файла список списка деталей
+ *                        каждая строка файла - список деталей, разделеннх ";"
+ */
 public class DetailsParser {
 
     public static List<List<String>> getDetailsFromFile(String fileName) throws Exception {

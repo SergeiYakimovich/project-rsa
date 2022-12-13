@@ -5,12 +5,19 @@ import code.calc.Model;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import static java.nio.file.Files.readString;
 
+/**
+ * makeModel() - создать модель из 2-х файлов (Single и Set)
+ * getModelFromFile() - получить часть модели из файла
+ */
 public class ModelParser {
 
     public static Model makeModel(String fileSingle, String fileSet) throws Exception {
@@ -23,7 +30,16 @@ public class ModelParser {
     }
 
     public static Map<List<String>,Double> getModelFromFile(String file) throws Exception {
-        Map<List<String>,Double> result = new HashMap<>();
+        Map<List<String>,Double> result = new TreeMap<>(new Comparator<List<String>>() {
+            @Override
+            public int compare(List<String> o1, List<String> o2) {
+                int lengthDifference = o2.size() - o1.size();
+                if (lengthDifference != 0) return lengthDifference;
+                String s1 = o1.stream().collect(Collectors.joining());
+                String s2 = o2.stream().collect(Collectors.joining());
+                return s2.compareTo(s1);
+            }
+        });
         String text = "";
         try {
             text = readString(Paths.get(file), StandardCharsets.UTF_8);
@@ -48,6 +64,7 @@ public class ModelParser {
             } catch (Exception e) {
                 System.out.println("Ошибка данных в файле " + file + "   " + String.join(";", mas));
             }
+            detailNames = detailNames.stream().sorted().collect(Collectors.toList());
             result.put(detailNames, hours);
         }
         return result;

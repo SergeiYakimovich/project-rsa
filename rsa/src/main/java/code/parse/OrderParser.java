@@ -14,6 +14,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * getOrderFromFile() - получить з/н из файла
+ * getOrdersFromDirectory() - получить список з/н из директории
+ */
 public class OrderParser {
 
     public static Order getOrderFromFile(String fileName) throws Exception {

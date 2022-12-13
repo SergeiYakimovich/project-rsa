@@ -6,6 +6,11 @@ import code.service.OrderService;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * calculate() - расчет н/ч для з/н по модели
+ * SINGLE - суммируем н/ч
+ * SET - берем только н/ч для набора
+ */
 public class Calculator {
     public enum CheckType {
         ALL,
