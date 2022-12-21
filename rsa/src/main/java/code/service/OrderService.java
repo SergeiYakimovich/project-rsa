@@ -50,7 +50,8 @@ public class OrderService {
         order.setCar("VW");
         order.setCompany("Unknown");
         String[] mas = str.split(Pattern.quote("\\"));
-        order.setName(mas[mas.length - 1]);
+        String pref = mas.length > 1 ? mas[mas.length - 2] + "\\" : "";
+        order.setName(pref + mas[mas.length - 1]);
         return order;
     }
 }

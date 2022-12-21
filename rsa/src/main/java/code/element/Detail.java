@@ -12,7 +12,6 @@ public class Detail {
     private Double count;
     private Double sum;
 
-
     @Override
     public String toString() {
         return "Detail { " + "number=" + this.number + "   name=" + this.name +

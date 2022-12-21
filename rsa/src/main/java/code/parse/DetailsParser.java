@@ -14,6 +14,7 @@ import static java.nio.file.Files.readString;
  */
 public class DetailsParser {
 
+
     public static List<List<String>> getDetailsFromFile(String fileName) throws Exception {
         List<List<String>> detailsList = new ArrayList<>();
         String text;

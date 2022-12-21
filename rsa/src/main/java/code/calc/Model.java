@@ -24,8 +24,8 @@ public class Model {
 
     @Override
     public String toString() {
-        return "Model { " + "name=" + name + "   listSingle=" + singleDetails.size()
-                + "   listSet=" + setDetails.size() + " }\n";
+        return "Model { " + "name=" + name + "   Single=" + singleDetails.size()
+                + "   Set=" + setDetails.size() + " }\n";
     }
 
 }

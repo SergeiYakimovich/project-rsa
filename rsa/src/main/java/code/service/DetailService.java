@@ -9,7 +9,7 @@ public class DetailService {
 
     public static boolean isDetailsContains(List<Detail> details, String str) {
         for(Detail detail : details) {
-            if(detail.getName().contains(str)) {
+            if(str.equals(detail.getName())) {
                 return true;
             }
         }

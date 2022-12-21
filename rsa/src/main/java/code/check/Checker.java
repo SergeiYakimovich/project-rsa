@@ -61,7 +61,7 @@ public class Checker {
 //        }
     }
 
-    private static Double countAvrDiffInPercent(List<Result> list) {
+    public static Double countAvrDiffInPercent(List<Result> list) {
         Double sum = 0.0;
         int count = 0;
         for(Result result : list) {
