@@ -1,83 +1,72 @@
 package code;
 
-import code.calc.Calculator;
-import code.calc.Model;
-import code.element.Detail;
+import code.element.Guide;
 import code.element.Order;
-import code.element.Work;
 import code.check.Checker;
-import code.parse.CsvOrder;
 import code.parse.DetailsParser;
-import code.parse.ModelParser;
+import code.parse.csvtype.CsvDetail;
+import code.parse.csvtype.CsvOrder;
+import code.parse.GuideParser;
 import code.parse.OrderParser;
 import code.check.Result;
-import code.service.DetailService;
-import code.service.WorkService;
 import code.utils.DetailUtils;
-import code.utils.Handler;
-import code.utils.ModelUtils;
+import code.utils.GuideUtils;
 
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 import static java.nio.file.Files.readString;
 import static java.nio.file.Files.writeString;
 
 public class App {
     public final static String ORDERS_ALL_DIR = "../data/all";
-    public final static String ORDERS_MANY_DIR = "../data/all/many";
     public final static String ORDERS_TEST_DIR = "../data/test";
     public final static String MODEL_DIR = "../model/";
-    public final static String FILE_SINGLE = "single.csv";
-    public final static String FILE_SET = "set.csv";
-    public final static String FILE_UNIQ_SET = "uniq-sets.txt";
 
     public static void main(String[] args) throws Exception {
         System.setOut(new java.io.PrintStream(System.out, true, "UTF-8"));
         List<Order> orders;
-        Order order;
-        Detail detail;
-        List<Detail> details;
-        Work work;
-        List<Work> works;
-        Result result;
-        Model model;
+        Guide guide;
+        List<String> mainDetails = new ArrayList<>();
         List<String> notMainDetails = new ArrayList<>();
-//        notMainDetails = List.of("МЕЛКИЕ ДЕТ","АБСОРБ","АКТИВАТОР","АПЛИКАТОР","К-Т", "УПЛ К-ЦО"
-//                ,"КРЮК", "НИТЬ", "РАСТВОР", "ЗАГЛУШ");
+
+//        mainDetails = List.of("БАМП","ДВЕР","ПОДКР","СТЕКЛО","РУЧК","ФОНАР",
+//                "БАГАЖ","РАМА", "БАК", "ДИСК","ЛОНЖЕР","ПАНЕЛ");
+        notMainDetails = List.of("МЕЛКИЕ ДЕТ","АБСОРБ","АКТИВАТОР","АПЛИКАТОР","К-Т", "УПЛ К-ЦО"
+                ,"КРЮК", "НИТЬ", "РАСТВОР", "ЗАГЛУШ");
 //      ,"АДСОРБ", "КОЖУХ", "УДЛИН"
+
+//        Сделать список всех деталей по частоте
+//        orders = OrderParser.getOrdersFromDirectory(ORDERS_ALL_DIR, new CsvOrder());
+//        DetailUtils.makeUniqDetails(MODEL_DIR + "details-all.csv", orders);
 
 
 //        Сделать список всех деталей по важности
-//        DetailUtils.makeNotMainDetails();
+//        orders = OrderParser.getOrdersFromDirectory(ORDERS_ALL_DIR, new CsvOrder());
+//        DetailUtils.makeNotMainDetails(MODEL_DIR + "not-main-det-all.csv", orders);
 
-//        Получить список не важных деталей
-//        notMainDetails = DetailUtils.getNotMainDetails();
+
+//        Получить список важных и неважных деталей
+//        notMainDetails = DetailsParser.readDetNames(MODEL_DIR + "not-main-det.csv");
+//        mainDetails = DetailsParser.readDetNames(MODEL_DIR + "main-details.csv");
 
 
 //        Создание модели
-        ModelUtils.makeModelUniqSets(ORDERS_MANY_DIR, notMainDetails);
+        orders = OrderParser.getOrdersFromDirectory(ORDERS_ALL_DIR, new CsvOrder());
+        guide = GuideUtils.makeGuide(orders, mainDetails, notMainDetails);
+        GuideParser.writeGuide(MODEL_DIR + "guide.json", guide);
+        GuideParser.writeGuideAsString(MODEL_DIR + "guide.txt", guide);
 
 //        Проверка модели
-        model = ModelParser.makeModel(MODEL_DIR + FILE_SINGLE, MODEL_DIR + FILE_UNIQ_SET);
+        guide = GuideParser.readGuide(MODEL_DIR + "guide.json");
         orders = OrderParser.getOrdersFromDirectory(ORDERS_ALL_DIR, new CsvOrder());
-        List<Result> list = Checker.checkOrders(model, orders, Calculator.CheckType.ALL);
+        List<Result> list = Checker.checkOrders(guide, orders);
         Checker.showResults(list, 10);
 
 //        Проверка тестовых запросов
-        model = ModelParser.makeModel(MODEL_DIR + FILE_SINGLE, MODEL_DIR + FILE_UNIQ_SET);
-        orders = OrderParser.getOrdersFromDirectory(ORDERS_TEST_DIR, new CsvOrder());
-        Calculator.calcOrders(model,orders, Calculator.CheckType.ALL);
-
-
+//        guide = GuideParser.readGuide(MODEL_DIR + "guide.json");
+//        orders = OrderParser.getOrdersFromDirectory(ORDERS_TEST_DIR, new CsvOrder());
+//        Checker.checkTestOrders(guide,orders);
 
     }
 

@@ -3,9 +3,9 @@ package code.parse;
 import code.element.Detail;
 import code.element.Order;
 import code.element.Work;
-import code.service.DetailService;
+import code.parse.csvtype.CsvElement;
+import code.parse.csvtype.CsvOrder;
 import code.service.OrderService;
-import code.service.WorkService;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
@@ -16,7 +16,6 @@ import static java.nio.file.Files.readString;
 import java.io.FileReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,36 +79,5 @@ public class OrderParser {
     public static List<Order> getOrdersFromDirectory(String dir) throws Exception {
         return  getOrdersFromDirectory(dir, new CsvOrder());
     }
-
-//    public static Order getOrderFromFile(String fileName) throws Exception {
-//        List<Detail> details = new ArrayList<>();
-//        List<Work> works = new ArrayList<>();
-//        Order result = OrderService.makeOrder(fileName);
-//        String text;
-//        try {
-//            text = readString(Paths.get(fileName), StandardCharsets.UTF_8);
-//        } catch (Exception e) {
-//            System.out.println("! Ошибка чтения из файла " + fileName);
-//            return null;
-//        }
-//        String[] stroki = text.split("\n");
-//        for(int i = 1; i < stroki.length - 1; i++) {
-//            String[] mas = new String[4];
-//            mas = stroki[i].split(";");
-//            if(mas[0] != "") {
-//                Detail newDetail = DetailService.makeDetail(mas);
-//                details.add(newDetail);
-////                System.out.println(newDetail.toString());
-//            } else {
-//                Work newWork = WorkService.makeWork(mas);
-//                works.add(newWork);
-////                System.out.println(newWork.toString());
-//            }
-//        }
-//        result.setDetails(details);
-//        result.setWorks(works);
-////        System.out.println(result.toString());
-//        return result;
-//    }
 
 }

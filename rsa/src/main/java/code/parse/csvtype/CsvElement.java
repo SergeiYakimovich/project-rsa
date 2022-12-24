@@ -1,4 +1,4 @@
-package code.parse;
+package code.parse.csvtype;
 
 import code.element.Detail;
 import code.element.Work;
@@ -7,13 +7,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-abstract class CsvElement {
+public abstract class CsvElement {
     private String number;
     private String name;
     private Double count;
     private Double sum;
-    abstract Work makeWorkFromCsvElement();
-    abstract Detail makeDetailFromCsvElement();
+    public abstract Work makeWorkFromCsvElement();
+    public abstract Detail makeDetailFromCsvElement();
 
     public String toString() {
         return "Element { " + "number=" + number + ", name="

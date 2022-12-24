@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Результат расчета для з/н
+ * Результат проверки справочника для з/н
  */
 @Getter
 @Setter

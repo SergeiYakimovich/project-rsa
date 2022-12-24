@@ -1,7 +1,8 @@
-package code.parse;
+package code.parse.csvtype;
 
 import code.element.Detail;
 import code.element.Work;
+import code.parse.csvtype.CsvElement;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.Setter;

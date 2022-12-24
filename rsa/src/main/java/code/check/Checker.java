@@ -1,7 +1,7 @@
 package code.check;
 
 import code.calc.Calculator;
-import code.calc.Model;
+import code.element.Guide;
 import code.element.Order;
 
 import java.util.ArrayList;
@@ -9,15 +9,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * checkOneOrder() - проверка одного з/н по модели
- * checkOrders() - проверка списка з/н по модели
+ * checkOneOrder() - проверка одного з/н по справочнику
+ * checkOrders() - проверка списка з/н по справочнику
  * showResults() - вывод результата проверки
+ * checkTestOrders() - проверка тестовых запросов
  */
 public class Checker {
 
-    public static Result checkOneOrder(Model model, Order order, Calculator.CheckType type) {
+    public static Result checkOneOrder(Guide guide, Order order) {
         Result result = new Result();
-        Double hours = Calculator.calculate(model, order, type);
+        Double hours = Calculator.calculate(guide, order);
         Double expected = order.getWorksCount();
         result.setHours(hours);
         result.setExpected(expected);
@@ -27,10 +28,10 @@ public class Checker {
         return result;
     }
 
-    public static List<Result> checkOrders(Model model, List<Order> orders, Calculator.CheckType type) {
+    public static List<Result> checkOrders(Guide guide, List<Order> orders) {
         List<Result> list = new ArrayList<>();
         for(Order order : orders) {
-            Result result = checkOneOrder(model, order, type);
+            Result result = checkOneOrder(guide, order);
             list.add(result);
         }
         return list.stream()
@@ -39,27 +40,23 @@ public class Checker {
     }
 
     public static void showResults(List<Result> list, int number) {
-
-//        for(int i = 0; i < list.size(); i++) {
-//            System.out.println(list.get(i).toString());
-//        }
-
         System.out.println("Checked on " + list.size() + " orders");
-//        System.out.println("Average difference = " + String.format("%.1f", countAvrDiff(list)));
         System.out.println("Average difference in % = " + String.format("%.1f", countAvrDiffInPercent(list)));
         System.out.println("Median difference in % = " + String.format("%.1f", list.get(list.size() / 2).getDiffInPercent()));
-
         System.out.println("Maximum deviation :");
         int n = list.size() > number ? number : list.size();
         for(int i = 0; i < n; i++) {
             System.out.println(list.get(i).toString());
         }
-
-//        System.out.println("Min deviation :");
-//        for(int i = 0; i < n; i++) {
-//            System.out.println(list.get(list.size() - 1 - i).toString());
-//        }
     }
+
+    public static void checkTestOrders(Guide guide, List<Order> orders) {
+        for(Order order : orders) {
+            double result = Calculator.calculate(guide, order);
+            System.out.println(order.getName() + " = " + result);
+        }
+    }
+
 
     public static Double countAvrDiffInPercent(List<Result> list) {
         Double sum = 0.0;
