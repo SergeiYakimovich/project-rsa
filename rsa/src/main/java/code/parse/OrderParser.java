@@ -72,7 +72,7 @@ public class OrderParser {
                 }
             }
         }
-        System.out.println("Load " + orders.size() + " orders from " + files.length);
+        System.out.println("Прочитано " + orders.size() + " з/н из " + files.length);
         return orders;
     }
 

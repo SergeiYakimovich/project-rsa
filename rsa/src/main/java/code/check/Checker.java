@@ -40,10 +40,16 @@ public class Checker {
     }
 
     public static void showResults(List<Result> list, int number) {
-        System.out.println("Checked on " + list.size() + " orders");
-        System.out.println("Average difference in % = " + String.format("%.1f", countAvrDiffInPercent(list)));
-        System.out.println("Median difference in % = " + String.format("%.1f", list.get(list.size() / 2).getDiffInPercent()));
-        System.out.println("Maximum deviation :");
+        System.out.println("\nПроверено на " + list.size() + " з/н");
+        System.out.println("Среднее отклонение в % = " + String.format("%.1f", countAvrDiffInPercent(list)) + "%");
+        System.out.println("Медианное отклонение в % = "
+                + String.format("%.1f", list.get(list.size() / 2).getDiffInPercent()) + "%");
+        long countBad = list.stream()
+                .filter(x -> x.getDiff() > 0.01)
+                .count();
+        System.out.println("С ошибками = " + countBad + " из " + list.size() + " з/н");
+        System.out.println("Точно посчитано = " + (list.size() - countBad) + " из " + list.size() + " з/н");
+        System.out.println("Максимальное отклонение :");
         int n = list.size() > number ? number : list.size();
         for(int i = 0; i < n; i++) {
             System.out.println(list.get(i).toString());
@@ -51,9 +57,10 @@ public class Checker {
     }
 
     public static void checkTestOrders(Guide guide, List<Order> orders) {
+        System.out.println("\nРезультаты расчета :");
         for(Order order : orders) {
             double result = Calculator.calculate(guide, order);
-            System.out.println(order.getName() + " = " + result);
+            System.out.println(order.getName() + " = " + String.format("%.2f",result) + " н/ч");
         }
     }
 

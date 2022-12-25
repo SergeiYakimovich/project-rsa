@@ -5,6 +5,7 @@ import code.element.Nabor;
 import code.element.Order;
 import code.parse.OrderParser;
 import code.service.OrderService;
+import code.service.WorkService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.FileWriter;
@@ -13,8 +14,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import static code.App.COLOR_WORK_NAMES;
 import static code.App.MODEL_DIR;
 import static java.nio.file.Files.writeString;
 
@@ -24,14 +27,30 @@ import static java.nio.file.Files.writeString;
 public class GuideUtils {
 
     public static Guide makeGuide(List<Order> orders, List<String> mainDetails, List<String> notMainDetails) throws Exception{
+        Guide guide = new Guide();
+        guide.setMainDetails(mainDetails);
+        guide.setNotMainDetails(notMainDetails);
+        orders.stream()
+                .filter(x -> x.getDetails().size() == 1
+                        || (x.getDetails().size() == 2 && (x.getDetails().get(1).getName().contains("МЕЛКИЕ ДЕТАЛИ")))
+                )
+                .forEach(x -> {
+                    Double hours = x.getWorksCount();
+                    String name = x.getDetails().get(0).getName();
+                    if(guide.getDetSingles().containsKey(name)) {
+                        hours = Double.min(hours, guide.getDetSingles().get(name));
+                    }
+                    guide.addSingles(name, hours);
+
+                });
+
         List<List<String>> detailsList = new ArrayList<>();
         List<String> detailsStringList = new ArrayList<>();
 
         for(Order order : orders) {
             List<String> newDetails = order.getDetails().stream()
                     .map(x -> x.getName())
-                    .filter(x -> isDetailInList(x, mainDetails))
-                    .filter(x -> !isDetailInList(x, notMainDetails))
+                    .filter(x -> isDetailGood(x, notMainDetails))
                     .sorted()
                     .collect(Collectors.toList());
             String newStr = newDetails.stream()
@@ -41,12 +60,18 @@ public class GuideUtils {
                 detailsList.add(newDetails);
             }
         }
-        Guide guide = new Guide();
         detailsList.sort((x1,x2) -> x2.size() - x1.size());
         for(List<String> details : detailsList) {
             Double hours = countMin(orders, details);
             Nabor newNabor = new Nabor(details, hours);
-            guide.addNabor(newNabor);
+            if(details.size() == 1) {
+                String name = details.get(0);
+                if(!guide.getDetSingles().containsKey(name)) {
+                    guide.addSingles(name, hours);
+                }
+            } else {
+                guide.addNaborSets(newNabor);
+            }
         }
         return guide;
     }
@@ -63,16 +88,16 @@ public class GuideUtils {
         return worksCount;
     }
 
-    public static boolean isDetailInList(String name, List<String> details) {
+    public static boolean isDetailGood(String name, List<String> details) {
         if(details.size() == 0) {
             return true;
         }
         for(String detName : details) {
             if(name.contains(detName)) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
 }

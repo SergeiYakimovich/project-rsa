@@ -11,6 +11,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 
+import static code.App.DET_MAIN;
 import static java.nio.file.Files.writeString;
 /**
  * readGuide() - получить из файла json справочник
@@ -30,10 +31,12 @@ public class GuideParser {
         Writer myWriter = new FileWriter(fileName, StandardCharsets.UTF_8);
         ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(myWriter, guide);
+        System.out.println("\nСправочник в json файле - " + fileName);
     }
 
     public static void writeGuideAsString(String fileName, Guide guide) throws IOException {
         writeString(Paths.get(fileName), guide.toString(), StandardCharsets.UTF_8);
+        System.out.println("\nСправочник в текстовом файле - " + fileName);
     }
 
 

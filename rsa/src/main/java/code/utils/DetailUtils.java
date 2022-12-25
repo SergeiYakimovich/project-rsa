@@ -15,19 +15,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static code.App.DET_FREQUENCY;
+import static code.App.DET_IMPORTANCE;
+import static code.App.DET_MAIN;
+import static code.App.DET_NOT_MAIN;
 import static code.App.MODEL_DIR;
 
 
 /**
  * makeUniqDetails() - посчитает уникальные детали c частотой появления в з/н и запишет в файл
- * makeNotMainDetails() - посчитает важность каждой уникальной детали (справочник без нее) и запишет в файл
+ * analizeDetails() - посчитает важность каждой уникальной детали (справочник без нее) и запишет в файл
  */
 public class DetailUtils {
 
-    public static void makeNotMainDetails(String filename, List<Order> orders) throws Exception {
+    public static void analizeDetails(List<Order> orders) throws Exception {
         List<String> notMainDetails;
-
-        List<String> allDetailNames = DetailsParser.readDetNames(MODEL_DIR + "details-all.csv");
+        List<String> allDetailNames = makeUniqDetails(DET_FREQUENCY, orders);
 
         Map<String, Double> myMap = new HashMap<>();
         for(String nextDetailName : allDetailNames) {
@@ -49,14 +52,27 @@ public class DetailUtils {
 
         List<CsvDetail> detList = new ArrayList<>();
         for(Map.Entry<String, Double> item : sortedMap.entrySet()) {
-            CsvDetail newDetail = new CsvDetail(item.getKey() , String.format("%.2f", item.getValue()));
+            CsvDetail newDetail = new CsvDetail(item.getKey(),
+                    String.format("%.2f", item.getValue()).replace(",", "."));
             detList.add(newDetail);
         }
-        DetailsParser.writeDetNames(filename, detList);
+        DetailsParser.writeDetNames(DET_IMPORTANCE, detList);
+        System.out.println("\nВажность деталей в файле - " + DET_IMPORTANCE);
 
+        List<CsvDetail> notMainDetList = detList.stream()
+                .filter(x -> Double.parseDouble(x.getCount()) < 0.1)
+                .toList();
+        DetailsParser.writeDetNames(DET_NOT_MAIN, notMainDetList);
+        System.out.println("\nНенужные детали в файле - " + DET_NOT_MAIN);
+
+        List<CsvDetail> mainDetList = detList.stream()
+                .skip(detList.size() - 10)
+                .toList();
+        DetailsParser.writeDetNames(DET_MAIN, mainDetList);
+        System.out.println("\nОсновные детали в файле - " + DET_MAIN);
     }
 
-    public static void makeUniqDetails(String filename, List<Order> orders) throws Exception {
+    public static List<String> makeUniqDetails(String filename, List<Order> orders) throws Exception {
         Map<String, Integer> det_Uniq = new HashMap<>();
         for(Order order : orders) {
             List<Detail> details = order.getDetails();
@@ -77,6 +93,9 @@ public class DetailUtils {
         }
         detList.sort((x1,x2) -> (int) (Double.parseDouble(x2.getCount()) - (Double.parseDouble(x1.getCount()))));
         DetailsParser.writeDetNames(filename, detList);
+        System.out.println("\nЧастотность деталей в файле - " + filename);
+
+        return detList.stream().map(x -> x.getName()).collect(Collectors.toList());
     }
 
 }

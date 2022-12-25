@@ -49,6 +49,7 @@ public class DetailsParser {
         CsvMapper mapper = new CsvMapper();
         CsvSchema schema = mapper.schemaFor(CsvDetail.class)
                 .withColumnSeparator(';')
+                .withoutQuoteChar()
                 .withHeader();
         ObjectWriter writer = mapper.writer(schema);
         writer.writeValue(new FileWriter(fileName, StandardCharsets.UTF_8),elements);
@@ -77,7 +78,9 @@ public class DetailsParser {
         CsvMapper mapper = new CsvMapper();
         CsvSchema schema = CsvSchema.builder()
                 .addColumn("name").build()
-                .withHeader().withColumnSeparator('\n');
+                .withHeader()
+                .withoutQuoteChar()
+                .withColumnSeparator('\n');
         ObjectWriter writer = mapper.writer(schema);
         writer.writeValue(new FileWriter(fileName, StandardCharsets.UTF_8), elements);
     }

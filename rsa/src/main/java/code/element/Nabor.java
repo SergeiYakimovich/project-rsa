@@ -45,4 +45,16 @@ public class Nabor implements Comparable{
         return "detNames=" + detNames.stream().collect(Collectors.joining(";")) +
                 "\ncount=" + String.format("%.2f", count) + "\n";
     }
+
+    public String show(List<String> mainDetails) {
+        String main = detNames.stream()
+                .filter(x -> mainDetails.contains(x))
+                .collect(Collectors.joining(";"));
+        String simple = detNames.stream()
+                .filter(x -> !mainDetails.contains(x))
+                .collect(Collectors.joining(";"));
+
+        return "Основные детали = " + main + "\nПрочие детали = " + simple +
+                "\nН/ч для набора = " + String.format("%.2f", count) + "\n";
+    }
 }
