@@ -1,22 +1,16 @@
 package code.parse.csvtype;
 
 import code.element.Detail;
+import code.element.Order;
 import code.element.Work;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public abstract class CsvElement {
-    private String number;
-    private String name;
-    private Double count;
-    private Double sum;
-    public abstract Work makeWorkFromCsvElement();
-    public abstract Detail makeDetailFromCsvElement();
+    public abstract Order makeOrderFromCsvElement(List<CsvElement> elements, String fileName);
 
-    public String toString() {
-        return "Element { " + "number=" + number + ", name="
-                + name + ", count=" + count + ", sum=" + sum + " }\n";
-    }
 }

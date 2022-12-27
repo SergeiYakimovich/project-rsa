@@ -24,7 +24,7 @@ import static code.App.MODEL_DIR;
 
 /**
  * makeUniqDetails() - посчитает уникальные детали c частотой появления в з/н и запишет в файл
- * analizeDetails() - посчитает важность каждой уникальной детали (справочник без нее) и запишет в файл
+ * analizeDetails() - посчитает важность каждой уникальной детали (средняя ошибка справочника без нее) и запишет в файл
  */
 public class DetailUtils {
 
@@ -37,7 +37,7 @@ public class DetailUtils {
             notMainDetails = List.of(nextDetailName);
             Guide guide = GuideUtils.makeGuide(orders, new ArrayList<>(), notMainDetails);
             List<Result> list = Checker.checkOrders(guide, orders);
-            Double diff = Checker.countAvrDiffInPercent(list) * 1000;
+            Double diff = Checker.countAvrDiffInPercent(list) * list.size();
             myMap.put(nextDetailName, diff);
         }
 
@@ -60,7 +60,7 @@ public class DetailUtils {
         System.out.println("\nВажность деталей в файле - " + DET_IMPORTANCE);
 
         List<CsvDetail> notMainDetList = detList.stream()
-                .filter(x -> Double.parseDouble(x.getCount()) < 0.1)
+                .filter(x -> Double.parseDouble(x.getCount()) < 1.0)
                 .toList();
         DetailsParser.writeDetNames(DET_NOT_MAIN, notMainDetList);
         System.out.println("\nНенужные детали в файле - " + DET_NOT_MAIN);

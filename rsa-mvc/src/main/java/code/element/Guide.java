@@ -34,19 +34,8 @@ public class Guide {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("Справочник для модели   " + name + "\n");
-        builder.append("\nНаборы з/ч :\n");
-        int i = 1;
-        for(Nabor nabor : detNaborSets) {
-            builder.append("\n№" + i + "\n" + nabor.show(mainDetails));
-            i++;
-        }
-        builder.append("\nОдиночные з/ч :\n");
-        i = 1;
-        for(Map.Entry<String, Double> nabor : getDetSingles().entrySet()) {
-            builder.append("\n№" + i + "\nДеталь = " + nabor.getKey() + "\nН/ч = "
-                    + String.format("%.2f", nabor.getValue()) + "\n");
-            i++;
-        }
+        builder.append("Наборы з/ч = " + detNaborSets.size() + "\n");
+        builder.append("Одиночные з/ч = " + detSingles.size() + "\n");
         return builder.toString();
     }
 }

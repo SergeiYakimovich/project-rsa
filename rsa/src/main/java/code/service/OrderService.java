@@ -1,6 +1,10 @@
 package code.service;
 
+import code.element.Detail;
 import code.element.Order;
+import code.element.Work;
+import code.parse.csvtype.CsvElement;
+import code.parse.csvtype.CsvRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +45,21 @@ public class OrderService {
         for(Order order : orders) {
             System.out.println(order.toString());
         }
+    }
+
+    public static Order makeSimpleOrder(List<String> elements, String fileName) {
+        Order result = makeOrder(fileName);
+        List<Detail> details = new ArrayList<>();
+        List<Work> works = new ArrayList<>();
+        for (String element : elements) {
+            Detail newDetail = new Detail("",element.trim(),0.0, 0.0);
+            details.add(newDetail);
+        }
+        Work newWork = new Work("Работы", 0.0);
+        works.add(newWork);
+        result.setDetails(details);
+        result.setWorks(works);
+        return result;
     }
 
     public static Order makeOrder(String str) {

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.nio.file.Files.readString;
+import static java.nio.file.Files.writeString;
 
 /**
  * readDetNames() - получить из файла список имен деталей (тип файла CsvDetail)
@@ -56,33 +58,18 @@ public class DetailsParser {
     }
 
     public static List<String> readDetOnlyNames(String fileName) throws IOException {
-        Reader myReader = new FileReader(fileName, StandardCharsets.UTF_8);
-        CsvMapper mapper = new CsvMapper();
-        CsvSchema schema = mapper.schemaFor(String.class)
-                .withColumnSeparator('\n')
-                .withSkipFirstDataRow(true);
-        MappingIterator<String> iterator = mapper
-                .readerFor(String.class)
-                .with(schema)
-                .with(CsvParser.Feature.SKIP_EMPTY_LINES)
-                .readValues(myReader);
-        List<String> list = iterator.readAll();
-
-        return list.stream()
+        String text = readString(Paths.get(fileName), StandardCharsets.UTF_8);
+        List<String> list = Arrays.stream(text.split("[\n,;]"))
                 .filter(s -> !s.isEmpty())
+                .map(x -> x.trim())
                 .sorted()
                 .collect(Collectors.toList());
+        return list;
     }
 
     public static void writeDetOnlyNames(String fileName, List<String> elements ) throws IOException {
-        CsvMapper mapper = new CsvMapper();
-        CsvSchema schema = CsvSchema.builder()
-                .addColumn("name").build()
-                .withHeader()
-                .withoutQuoteChar()
-                .withColumnSeparator('\n');
-        ObjectWriter writer = mapper.writer(schema);
-        writer.writeValue(new FileWriter(fileName, StandardCharsets.UTF_8), elements);
+        String text = elements.stream().collect(Collectors.joining("\n"));
+        writeString(Paths.get(fileName), text, StandardCharsets.UTF_8);
     }
 
 }

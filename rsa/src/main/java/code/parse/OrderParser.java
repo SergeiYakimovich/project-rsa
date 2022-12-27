@@ -1,12 +1,16 @@
 package code.parse;
 
+import code.App;
 import code.element.Detail;
+import code.element.Guide;
 import code.element.Order;
 import code.element.Work;
 import code.parse.csvtype.CsvElement;
 import code.parse.csvtype.CsvOrder;
+import code.parse.csvtype.CsvText;
 import code.service.OrderService;
 import com.fasterxml.jackson.databind.MappingIterator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
@@ -22,51 +26,43 @@ import java.util.List;
 /**
  * getOrderFromCsvFile() - получить з/н из Csv файла
  * getOrdersFromDirectory() - получить список з/н из директории
+ * getOrderFromTextFile() - получить з/н из текстового файла
  */
 public class OrderParser {
 
-    public static <T extends CsvElement> Order getOrderFromCsvFile (String fileName, T element ) throws Exception {
+    public static Order getOrderFromCsvFile (String fileName, CsvElement element) throws Exception {
         Reader myReader = new FileReader(fileName, StandardCharsets.UTF_8);
         CsvMapper mapper = new CsvMapper();
         CsvSchema schema = mapper.schemaFor(element.getClass())
                 .withColumnSeparator(';').withSkipFirstDataRow(true);
-        MappingIterator<T> iterator = mapper
+        MappingIterator<CsvElement> iterator = mapper
                 .readerFor(element.getClass())
                 .with(schema)
                 .readValues(myReader);
-        List<T> elements;
+        List<CsvElement> csvElements;
         try {
-            elements = iterator.readAll();
+            csvElements = iterator.readAll();
         } catch (Exception e) {
             System.out.println("Ошибка чтения из файла " + fileName);
             return null;
         }
-        List<Detail> details = new ArrayList<>();
-        List<Work> works = new ArrayList<>();
-        Order result = OrderService.makeOrder(fileName);
-        for (T item : elements) {
-            if(!item.getNumber().isEmpty()) {
-                Detail newDetail = item.makeDetailFromCsvElement();
-                details.add(newDetail);
-            } else if(!item.getName().equals("Сумма") && !item.getName().isEmpty()) {
-                Work newWork = item.makeWorkFromCsvElement();
-                works.add(newWork);
-            }
-        }
-        result.setDetails(details);
-        result.setWorks(works);
-        return result;
+        return element.makeOrderFromCsvElement(csvElements, fileName);
     }
 
-    public static List<Order> getOrdersFromDirectory(String dir, CsvElement type) throws Exception {
+    public static <T> List<Order> getOrdersFromDirectory(String dir, CsvElement type) throws Exception {
         List<Order> orders = new ArrayList<>();
         File[] files = new File(dir).listFiles();
+        Order order;
         for(File file : files) {
             String s = file.toString();
             if(file.isDirectory()) {
                 orders.addAll(getOrdersFromDirectory(s,type));
             } else {
-                Order order = getOrderFromCsvFile(file.toString(), type);
+                if(type.getClass() == CsvText.class) {
+                    order = getOrderFromTextFile(file.toString());
+                } else {
+                    order = getOrderFromCsvFile(file.toString(), type);
+                }
                 if (order != null && !order.isOrderEmpty()) {
                     orders.add(order);
                 }
@@ -76,8 +72,15 @@ public class OrderParser {
         return orders;
     }
 
-    public static List<Order> getOrdersFromDirectory(String dir) throws Exception {
-        return  getOrdersFromDirectory(dir, new CsvOrder());
+    public static Order getOrderFromTextFile(String fileName) {
+        List<String> elements = new ArrayList<>();
+        try {
+            elements = DetailsParser.readDetOnlyNames(fileName);
+        } catch (Exception e) {
+            System.out.println("Ошибка чтения из файла " + fileName);
+            return null;
+        }
+        return OrderService.makeSimpleOrder(elements, fileName);
     }
 
 }

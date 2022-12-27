@@ -41,7 +41,7 @@ public class Checker {
 
     public static void showResults(List<Result> list, int number) {
         System.out.println("\nПроверено на " + list.size() + " з/н");
-        System.out.println("Среднее отклонение в % = " + String.format("%.1f", countAvrDiffInPercent(list)) + "%");
+        System.out.println("Точность в % = " + String.format("%.1f", 100 - countAvrDiffInPercent(list)) + "%");
         System.out.println("Медианное отклонение в % = "
                 + String.format("%.1f", list.get(list.size() / 2).getDiffInPercent()) + "%");
         long countBad = list.stream()
@@ -67,22 +67,18 @@ public class Checker {
 
     public static Double countAvrDiffInPercent(List<Result> list) {
         Double sum = 0.0;
-        int count = 0;
         for(Result result : list) {
             sum += result.getDiffInPercent();
-            count++;
         }
-        return sum / count;
+        return sum / list.size();
     }
 
     private static Double countAvrDiff(List<Result> list) {
         Double sum = 0.0;
-        int count = 0;
         for(Result result : list) {
             sum += result.getDiff();
-            count++;
         }
-        return sum / count;
+        return sum / list.size();
     }
     public static Double countDiff(Double x1, Double x2)
     {   Double x = (1 - x1 / x2) * 100;
