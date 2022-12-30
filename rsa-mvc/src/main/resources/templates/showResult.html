@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Результаты</title>
+</head>
+<body>
+    <div>
+        <a href="/">Главная</a>
+        <a href="/count">Расчеты</a>
+        <a href="/guide">Справочники</a>
+    </div>
+    <div>
+        <h1>Результат :</h1>
+        <p th:text="${result}"></p>
+    </div>
+</body>
+</html>

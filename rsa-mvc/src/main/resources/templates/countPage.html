@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Расчеты</title>
+</head>
+<body>
+    <div>
+        <a href="/">Главная</a>
+        <a href="/count">Расчеты</a>
+        <a href="/guide">Справочники</a>
+    </div>
+    <form action="/count" method="post">
+        <h1>Выберите справочник</h1>
+        <select name="name" required="required">
+            <tr th:each="car : ${cars}" th:object="${car}">
+                <option th:value="${car.getName()}" th:text="${car.getName()}"></option>
+            </tr>
+        </select>
+        <h1>Введите список з/ч</h1>
+        <div>
+            <textarea name="text" cols="40" rows="5"></textarea>
+        </div>
+        <h1>Рассчитайте н/ч</h1>
+        <div>
+            <input type="submit" value="Проверить">
+        </div>
+    </form>
+</body>
+</html>

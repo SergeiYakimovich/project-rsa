@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Справочники</title>
+</head>
+<body>
+<div>
+    <a href="/">Главная</a>
+    <a href="/count">Расчеты</a>
+    <a href="/guide">Справочники</a>
+</div>
+<form action="/guide/delete" method="post">
+    <h1>Выберите справочник для удаления</h1>
+    <select name="id" required="required">
+        <tr th:each="car : ${cars}" th:object="${car}">
+            <option th:value="${car.getId()}" th:text="${car.getName()}"></option>
+        </tr>
+    </select>
+    <div>
+        <input type="submit" value="Удалить">
+    </div>
+</form>
+<form action="/guide" method="post">
+    <h1>Выберите файл со справочником для добавления</h1>
+    <div>
+        <input type="file" name="url">
+    </div>
+    <div>
+        <input type="submit" value="Добавить">
+    </div>
+</form>
+</body>
+</html>
