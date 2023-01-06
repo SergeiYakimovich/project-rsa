@@ -13,16 +13,30 @@
         <h1>Выберите справочник</h1>
         <select name="name" required="required">
             <tr th:each="car : ${cars}" th:object="${car}">
-                <option th:value="${car.getName()}" th:text="${car.getName()}"></option>
+                <option th:value="${car}" th:text="${car}"></option>
             </tr>
         </select>
-        <h1>Введите список з/ч</h1>
+        <h1>Выберите файл со списком з/ч или введите список з/ч</h1>
         <div>
+            <input type="file" id="fileName" name="fileName" onchange="loadFileAsText()">
+            <input type="hidden" id="fileText" name="fileText"/>
+            <script type="text/javascript">
+                function loadFileAsText(){
+                    var fileToLoad = document.getElementById("fileName").files[0];
+                    var fileReader = new FileReader();
+                    fileReader.onload = function(fileLoadedEvent){
+                        var textFromFileLoaded = fileLoadedEvent.target.result;
+                        document.getElementById("fileText").value = textFromFileLoaded;
+                    };
+                    fileReader.readAsText(fileToLoad, "UTF-8");
+                }
+            </script>
+            <span>   или   </span>
             <textarea name="text" cols="40" rows="5"></textarea>
         </div>
         <h1>Рассчитайте н/ч</h1>
         <div>
-            <input type="submit" value="Проверить">
+            <input type="submit" value="Рассчитать">
         </div>
     </form>
 </body>

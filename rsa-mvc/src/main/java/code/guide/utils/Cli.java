@@ -16,13 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static code.guide.utils.MyConsts.BASE_URL;
 import static code.guide.utils.MyConsts.GUIDE_FILE;
 import static code.guide.utils.MyConsts.GUIDE_FILE_100;
 import static code.guide.utils.MyConsts.GUIDE_TEXT_FILE;
 import static code.guide.utils.MyConsts.GUIDE_TEXT_FILE_100;
-import static code.guide.utils.MyConsts.ORDERS_DIR;
-import static code.guide.utils.MyConsts.TEST_DIR;
 import static code.guide.utils.MyConsts.XML_DIR;
 
 public class Cli {
@@ -52,10 +49,10 @@ public class Cli {
                 makeAndCheck(mainDetails, notMainDetails, GUIDE_FILE, GUIDE_TEXT_FILE);
                 break;
             case 5 : //        Проверка на тестовых запросах (тип - текст с разделителями [,;\n])
-                guide = GuideParser.readGuide(GUIDE_FILE_100);
-//                List<Order> orders1 = OrderParser.getOrdersFromDirectory(ORDERS_DIR, new CsvOrder());
+                guide = GuideParser.readGuide(MyConsts.GUIDE_FILE);
+//                orders = OrderParser.getOrdersFromDirectory(TEST_DIR, new CsvOrder());
 //                orders = OrderParser.getOrdersFromDirectory(TEST_DIR, new CsvRequest());
-                orders = OrderParser.getOrdersFromDirectory(TEST_DIR, new CsvText());
+                orders = OrderParser.getOrdersFromDirectory(MyConsts.TEST_DIR, new CsvText());
                 Checker.checkTestOrders(guide,orders);
                 break;
         }

@@ -38,4 +38,25 @@
     <changeSet author="sergei (generated)" id="1665245298844-5">
         <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="works" constraintName="FKgskejfslbxt19kk5dwvw7466d" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="orders" validate="true"/>
     </changeSet>
+    <changeSet author="sergei (generated)" id="1673018249719-1">
+        <dropForeignKeyConstraint baseTableName="DETAILS" constraintName="FK3OSHN7THWWQGKUKFV7M2K3WHM"/>
+    </changeSet>
+    <changeSet author="sergei (generated)" id="1673018249719-2">
+        <dropForeignKeyConstraint baseTableName="WORKS" constraintName="FKGSKEJFSLBXT19KK5DWVW7466D"/>
+    </changeSet>
+    <changeSet author="sergei (generated)" id="1673018249719-3">
+        <dropTable tableName="CARS"/>
+    </changeSet>
+    <changeSet author="sergei (generated)" id="1673018249719-4">
+        <dropTable tableName="DETAILS"/>
+    </changeSet>
+    <changeSet author="sergei (generated)" id="1673018249719-5">
+        <dropTable tableName="GUIDESQLS"/>
+    </changeSet>
+    <changeSet author="sergei (generated)" id="1673018249719-6">
+        <dropTable tableName="ORDERS"/>
+    </changeSet>
+    <changeSet author="sergei (generated)" id="1673018249719-7">
+        <dropTable tableName="WORKS"/>
+    </changeSet>
 </databaseChangeLog>

@@ -57,9 +57,8 @@ public class DetailsParser {
     public static List<String> readDetOnlyNames(String fileName) throws IOException {
         String text = readString(Paths.get(fileName), StandardCharsets.UTF_8);
         List<String> list = Arrays.stream(text.split("[\n,;]"))
-                .map(x -> x.trim())
                 .filter(s -> !s.isEmpty())
-                .filter(s -> !s.contains("Наименование"))
+                .map(x -> x.trim())
                 .sorted()
                 .collect(Collectors.toList());
         return list;

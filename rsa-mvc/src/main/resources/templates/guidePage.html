@@ -11,9 +11,9 @@
 </div>
 <form action="/guide/delete" method="post">
     <h1>Выберите справочник для удаления</h1>
-    <select name="id" required="required">
+    <select name="name" required="required">
         <tr th:each="car : ${cars}" th:object="${car}">
-            <option th:value="${car.getId()}" th:text="${car.getName()}"></option>
+            <option th:value="${car}" th:text="${car}"></option>
         </tr>
     </select>
     <div>
@@ -23,8 +23,20 @@
 <form action="/guide" method="post">
     <h1>Выберите файл со справочником для добавления</h1>
     <div>
-        <input type="file" name="url">
+        <input type="file" id="fileName" name="fileName" onchange="loadFileAsText()">
+        <input type="hidden" id="fileText" name="fileText"/>
     </div>
+    <script type="text/javascript">
+        function loadFileAsText(){
+            var fileToLoad = document.getElementById("fileName").files[0];
+            var fileReader = new FileReader();
+            fileReader.onload = function(fileLoadedEvent){
+                var textFromFileLoaded = fileLoadedEvent.target.result;
+                document.getElementById("fileText").value = textFromFileLoaded;
+            };
+            fileReader.readAsText(fileToLoad, "UTF-8");
+        }
+    </script>
     <div>
         <input type="submit" value="Добавить">
     </div>

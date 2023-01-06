@@ -1,9 +1,7 @@
 package code.mvc.mvcutils;
 
 import code.guide.element.Guide;
-import code.mvc.model.Car;
 import code.mvc.model.Guidesql;
-import code.mvc.repository.CarRepository;
 import code.mvc.repository.GuidesqlRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -37,12 +35,9 @@ public class GuidesqlUtils {
     }
 
     public static Guidesql makeSqlFromGuide(Guide guide) throws IOException {
-        Car car = new Car();
         Guidesql guidesql = new Guidesql();
-        car.setName(guide.getName());
+        guidesql.setName(guide.getName());
         guidesql.setText(makeJsonTextFromGuide(guide));
-        guidesql.setCar(car);
-        car.setGuidesql(guidesql);
         return guidesql;
     }
     public static Guide makeGuideFromSql(Guidesql guidesql) throws IOException {
@@ -51,20 +46,20 @@ public class GuidesqlUtils {
     }
 
     public static void SQLtestGuide(ConfigurableApplicationContext context) throws IOException {
-        GuidesqlRepository guidesqlRepository = context.getBean(GuidesqlRepository.class);
-        CarRepository carRepository = context.getBean(CarRepository.class);
-
-        Guide guide1 = getGuideFromJsonFile(GUIDE_FILE);
-        Guidesql guidesql1 = makeSqlFromGuide(guide1);
-        guidesqlRepository.save(guidesql1);
-
-        List<Guidesql> listGuides = guidesqlRepository.findAll();
-        List<Car> listCars = carRepository.findAll();
-        Guidesql guidesql = guidesqlRepository.findByCarName("VW-Polo").get();
-
-        Guide guide3 = GuidesqlUtils.makeGuideFromSql(guidesql);
-
-        System.out.println(guide3.getName());
+//        GuidesqlRepository guidesqlRepository = context.getBean(GuidesqlRepository.class);
+//        CarRepository carRepository = context.getBean(CarRepository.class);
+//
+//        Guide guide1 = getGuideFromJsonFile(GUIDE_FILE);
+//        Guidesql guidesql1 = makeSqlFromGuide(guide1);
+//        guidesqlRepository.save(guidesql1);
+//
+//        List<Guidesql> listGuides = guidesqlRepository.findAll();
+//        List<Car> listCars = carRepository.findAll();
+//        Guidesql guidesql = guidesqlRepository.findByName("VW-Polo").get();
+//
+//        Guide guide3 = GuidesqlUtils.makeGuideFromSql(guidesql);
+//
+//        System.out.println(guide3.getName());
     }
 
 }
