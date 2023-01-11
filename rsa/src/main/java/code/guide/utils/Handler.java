@@ -9,10 +9,10 @@ import static code.guide.utils.MyConsts.BASE_URL;
 import static code.guide.utils.MyConsts.ORDERS_DIR;
 import static java.nio.file.Files.readString;
 
+/**
+ * moveFiles() - автоматический перенос ненужных файлов в другую директорию
+ */
 public class Handler {
-
-    public static void handle() throws Exception {
-    }
 
     public static void moveFiles() throws IOException {
         String text = readString(Paths.get(BASE_URL + "badcsv DX-4.txt"), StandardCharsets.ISO_8859_1);
@@ -23,7 +23,6 @@ public class Handler {
                 file.renameTo(new File(BASE_URL + str));
             }
         }
-//        System.out.println();
     }
 
 

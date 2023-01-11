@@ -2,6 +2,9 @@ package code.guide.utils;
 
 import java.util.List;
 
+/**
+ * заданные имена файлов-каталогов, которые используются в программе
+ */
 public class MyConsts {
     public final static String BASE_URL = "../data/";
     public final static String ORDERS_DIR = BASE_URL + "order/";
@@ -13,7 +16,7 @@ public class MyConsts {
     public final static String DET_IMPORTANCE = GUIDE_DIR + "det-importance.csv";
     public final static String DET_MAIN = GUIDE_DIR + "det-main.csv";
     public final static String DET_NOT_MAIN = GUIDE_DIR + "det-not-main.csv";
-    public final static String GUIDE_FILE_NAME = "VW-Polo";
+    public final static String GUIDE_FILE_NAME = "Kia-Rio-D";
     public final static String GUIDE_FILE = GUIDE_DIR + GUIDE_FILE_NAME + ".json";
     public final static String GUIDE_TEXT_FILE = GUIDE_DIR + GUIDE_FILE_NAME + ".txt";
     public final static String GUIDE_FILE_100 = GUIDE_DIR + GUIDE_FILE_NAME + "-100.json";

@@ -18,7 +18,10 @@ import static code.guide.utils.MyConsts.BASE_URL;
 import static code.guide.utils.MyConsts.ORDERS_DIR;
 import static java.nio.file.Files.writeString;
 
-
+/**
+ * convertOrderFromXmlToCsv() - получить Csv з/н из XML файла
+ * convertOrdersFromDirectory() - получить список Csv з/н из директории c XML файлами
+ */
 public class XmlParser {
 
     public static boolean convertOrderFromXmlToCsv (String fileName) throws Exception {
@@ -75,8 +78,6 @@ public class XmlParser {
         str = String.format("%.2f", hours);
         str = str.replaceAll(",", ".");
 
-//        char last = str.charAt(str.length() - 1);
-//        str = str.substring(0,str.length() - 1) + "." + last;
         buffer.append(";Работы;" + str + ";");
 
         String[] mas = fileName.split(Pattern.quote("\\"));

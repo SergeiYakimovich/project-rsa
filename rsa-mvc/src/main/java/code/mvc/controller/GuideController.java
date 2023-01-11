@@ -5,8 +5,6 @@ import code.mvc.model.Guidesql;
 import code.mvc.mvcutils.GuidesqlUtils;
 import code.mvc.repository.GuidesqlRepository;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.Request;
-import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.util.List;
-
-import static code.guide.utils.MyConsts.GUIDE_DIR;
-import static code.guide.utils.MyConsts.LIB_DIR;
 
 @AllArgsConstructor
 @Controller
@@ -36,16 +31,6 @@ public class GuideController {
 
     @PostMapping
     public String addGuide(String fileName, String fileText, Model model) throws IOException {
-//        @RequestParam(value = "fileText")
-//        Guide guide;
-//        try {
-//            guide = GuidesqlUtils.getGuideFromJsonFile(LIB_DIR + url);
-//        } catch (IOException e) {
-//            String result = "Ошибка чтения из файла " + url;
-//            model.addAttribute("result", result);
-//            return "showResult";
-//        }
-
         String result;
         Guide guide = GuidesqlUtils.getGuideFromJsonText(fileText);
         Guidesql guidesql = guidesqlRepository.findByName(guide.getName())

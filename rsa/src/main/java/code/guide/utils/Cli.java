@@ -25,6 +25,10 @@ import static code.guide.utils.MyConsts.ORDERS_DIR;
 import static code.guide.utils.MyConsts.TEST_DIR;
 import static code.guide.utils.MyConsts.XML_DIR;
 
+/**
+ * getChoice() - выдать варианты и получить выбор пользователя
+ * fulfill() - выполнить выбранные действия
+ */
 public class Cli {
 
     public static void fulfill(int n) throws Exception {
@@ -56,7 +60,7 @@ public class Cli {
 //                List<Order> orders1 = OrderParser.getOrdersFromDirectory(ORDERS_DIR, new CsvOrder());
 //                orders = OrderParser.getOrdersFromDirectory(TEST_DIR, new CsvRequest());
                 orders = OrderParser.getOrdersFromDirectory(TEST_DIR, new CsvText());
-                Checker.checkTestOrders(guide,orders);
+                Checker.countTestOrders(guide,orders);
                 break;
         }
     }
@@ -83,7 +87,7 @@ public class Cli {
         GuideParser.writeGuide(guideFile, guide);
         GuideParser.writeGuideAsString(guideTextFile, guide, mainDetails);
         List<Result> results = Checker.checkOrders(guide, orders);
-        Checker.showResults(results, 10);
+        Checker.showResults(results, 65);
     }
 
     public static List<String> getMainDet() {

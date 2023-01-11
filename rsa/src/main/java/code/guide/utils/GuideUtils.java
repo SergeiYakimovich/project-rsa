@@ -15,7 +15,8 @@ import static code.guide.utils.MyConsts.GUIDE_FILE;
  */
 public class GuideUtils {
 
-    public static Guide makeGuide(List<Order> orders, List<String> mainDetails, List<String> notMainDetails, String fileName) throws Exception{
+    public static Guide makeGuide(List<Order> orders, List<String> mainDetails,
+                                  List<String> notMainDetails, String fileName) throws Exception{
         Guide guide = new Guide();
         guide.setName(getNameFromFileName(fileName));
 //        guide.setMainDetails(mainDetails);

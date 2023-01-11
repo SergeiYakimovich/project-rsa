@@ -44,8 +44,9 @@ public class CountController {
                 text = fileText;
             }
             List<String> details = Arrays.stream(text.split("[\n,;]"))
-                    .filter(s -> !s.isEmpty())
                     .map(x -> x.trim())
+                    .filter(s -> !s.isEmpty())
+                    .filter(s -> !s.contains("Наименование"))
                     .sorted()
                     .collect(Collectors.toList());
             Order order = OrderService.makeSimpleOrder(details, fileName);

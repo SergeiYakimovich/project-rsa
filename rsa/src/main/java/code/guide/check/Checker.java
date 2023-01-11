@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * checkOneOrder() - проверка одного з/н по справочнику
  * checkOrders() - проверка списка з/н по справочнику
  * showResults() - вывод результата проверки
- * checkTestOrders() - проверка тестовых запросов
+ * countTestOrders() - расчет н/ч для тестовых запросов
  */
 public class Checker {
 
@@ -41,13 +41,14 @@ public class Checker {
 
     public static void showResults(List<Result> list, int number) {
         System.out.println("\nПроверено на " + list.size() + " з/н");
-        System.out.println("Точность в % = " + String.format("%.1f", 100 - countAvrDiffInPercent(list)) + "%");
+        System.out.println("Средняя точность в % = " + String.format("%.1f", 100 - countAvrDiffInPercent(list)) + "%");
         System.out.println("Медианное отклонение в % = "
                 + String.format("%.1f", list.get(list.size() / 2).getDiffInPercent()) + "%");
-        long countBad = list.stream()
+        int countBad = (int) list.stream()
                 .filter(x -> x.getDiff() > 0.01)
                 .count();
-        System.out.println("С ошибками = " + countBad + " из " + list.size() + " з/н");
+        System.out.println("С ошибками = " + countBad + " из " + list.size() + " з/н ("
+                + String.format("%.1f", (double) countBad / list.size() * 100) + "%)");
         System.out.println("Точно посчитано = " + (list.size() - countBad) + " из " + list.size() + " з/н");
         System.out.println("Максимальное отклонение :");
         int n = list.size() > number ? number : list.size();
@@ -56,7 +57,7 @@ public class Checker {
         }
     }
 
-    public static void checkTestOrders(Guide guide, List<Order> orders) {
+    public static void countTestOrders(Guide guide, List<Order> orders) {
         System.out.println("\nРезультаты расчета :");
         for(Order order : orders) {
             double result = Calculator.calculate(guide, order);

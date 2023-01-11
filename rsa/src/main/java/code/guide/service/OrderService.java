@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * makeOrder() - создать пустой з/н (имя и пустые списки з/ч и работ)
+ * makeSimpleOrder() - создать з/н из списка имен з/ч
+ */
 public class OrderService {
 
     public static List<Order> getOrdersContainsDetail(List<Order> orders, String str) {
@@ -64,7 +68,7 @@ public class OrderService {
         Order order = new Order();
         order.setDetails(new ArrayList<>());
         order.setWorks(new ArrayList<>());
-        order.setCar("VW");
+        order.setCar("Unknown");
         order.setCompany("Unknown");
         String[] mas = str.split(Pattern.quote("\\"));
         String pref = mas.length > 1 ? mas[mas.length - 2] + "\\" : "";
