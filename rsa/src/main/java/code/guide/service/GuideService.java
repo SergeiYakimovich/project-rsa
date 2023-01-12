@@ -50,8 +50,14 @@ public class GuideService {
                 .collect(Collectors.toList());
         String main = showList(mainList);
         String simple = showList(simpleList);
-        return "-> Основные детали =\n" + main + "\n-> Прочие детали =\n" + simple +
-                "\n-> Н/ч для набора = " + String.format("%.2f", nabor.getCount()) + "\n";
+        String resultText = "-> Основные детали =\n" + main + "\n-> Прочие детали =\n" + simple +
+                "\n-> Н/ч для набора = " + String.format("%.2f", nabor.getCount());
+        if (nabor.getMax() - nabor.getMin() > 0.01) {
+            resultText += "\n-> min = " + String.format("%.2f", nabor.getMin()) +
+                    "\n-> max = " + String.format("%.2f", nabor.getMax());
+        }
+        return resultText + "\n";
+
     }
 
     private static String showList(List<String> detList) {

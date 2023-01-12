@@ -53,12 +53,12 @@ public class GuideUtils {
         }
         detailsList.sort((x1,x2) -> x2.size() - x1.size());
         for(List<String> details : detailsList) {
-            Double hours = countMin(orders, details);
-            Nabor newNabor = new Nabor(details, hours);
+            double[] minmax = countMinMax(orders, details, notMainDetails);
+            Nabor newNabor = new Nabor(details, minmax[0], minmax[1]);
             if(details.size() == 1) {
                 String name = details.get(0);
                 if(!guide.getDetSingles().containsKey(name)) {
-                    guide.addSingles(name, hours);
+                    guide.addSingles(name, Double.sum(minmax[0], minmax[1])/2);
                 }
             } else {
                 guide.addNaborSets(newNabor);
@@ -76,16 +76,30 @@ public class GuideUtils {
         return arr[0];
     }
 
-    public static Double countMin(List<Order> orders, List<String> detailNames) {
+    public static double[] countMinMax(List<Order> orders, List<String> detailNames, List<String> notMainDetails) {
         List<Order> ordersContainsNames = OrderService.getOrdersContainsAll(orders, detailNames);
         if(ordersContainsNames.size() == 0) {
-            return 0.0;
+            return new double[]{0.0, 0.0};
         }
-        Double worksCount = Double.MAX_VALUE;
+
+        Double worksMin = Double.MAX_VALUE;
+        Double worksMax = Double.MIN_VALUE;
         for(Order order : ordersContainsNames) {
-            worksCount = Double.min(worksCount, order.getWorksCount());
+            Long detSize = order.getDetails().stream()
+                    .map(x -> x.getName())
+                    .filter(x -> isDetailGood(x, notMainDetails))
+                    .count();
+            if(detSize == detailNames.size()) {
+                double newHours = order.getWorksCount();
+                worksMin = Double.min(worksMin, newHours);
+                worksMax = Double.max(worksMax, newHours);
+//                if(worksMax - worksMin > 0.1) {
+//                    System.out.println((order.getName()));
+//                }
+            }
         }
-        return worksCount;
+        double[] minmax= new double[]{worksMin, worksMax};
+        return minmax;
     }
 
     public static boolean isDetailGood(String name, List<String> details) {

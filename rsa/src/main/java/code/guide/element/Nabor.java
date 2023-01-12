@@ -14,11 +14,15 @@ import java.util.stream.Collectors;
 public class Nabor implements Comparable{
     private TreeSet<String> detNames = new TreeSet<>();
     private Double count = 0.0;
+    private Double min = 0.0;
+    private Double max = 0.0;
 
-    public Nabor(Collection<String> detNames, Double count) {
+    public Nabor(Collection<String> detNames, Double min, Double max) {
         this.detNames = new TreeSet<>();
         this.detNames.addAll(detNames);
-        this.count = count;
+        this.min = min;
+        this.max = max;
+        this.count = Double.sum(min, max) / 2;
     }
 
     public void setDetNames(Collection<String> detNames) {

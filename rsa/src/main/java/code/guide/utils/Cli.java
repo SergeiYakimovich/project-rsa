@@ -87,7 +87,7 @@ public class Cli {
         GuideParser.writeGuide(guideFile, guide);
         GuideParser.writeGuideAsString(guideTextFile, guide, mainDetails);
         List<Result> results = Checker.checkOrders(guide, orders);
-        Checker.showResults(results, 65);
+        Checker.showResults(results, 10);
     }
 
     public static List<String> getMainDet() {

@@ -56,7 +56,9 @@ public class XmlParser {
 
 //                System.out.println(str);
 //                System.out.println(uprNumber + " " + name + " " + number);
-
+                if(name.length() == 1) {
+                    System.out.println(fileName + " - имя з/ч = " + name);
+                }
                 buffer.append(uprNumber + ";" + name + ";" + "1.0" + ";" + "1.0" + "\n");
             }
             str = reader.readLine();
