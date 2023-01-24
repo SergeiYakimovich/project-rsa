@@ -22,6 +22,7 @@ import static code.guide.utils.MyConsts.GUIDE_FILE_100;
 import static code.guide.utils.MyConsts.GUIDE_TEXT_FILE;
 import static code.guide.utils.MyConsts.GUIDE_TEXT_FILE_100;
 import static code.guide.utils.MyConsts.ORDERS_DIR;
+import static code.guide.utils.MyConsts.SHOW_WRONG;
 import static code.guide.utils.MyConsts.TEST_DIR;
 import static code.guide.utils.MyConsts.XML_DIR;
 
@@ -87,7 +88,7 @@ public class Cli {
         GuideParser.writeGuide(guideFile, guide);
         GuideParser.writeGuideAsString(guideTextFile, guide, mainDetails);
         List<Result> results = Checker.checkOrders(guide, orders);
-        Checker.showResults(results, 10);
+        Checker.showResults(results, SHOW_WRONG);
     }
 
     public static List<String> getMainDet() {

@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static code.guide.utils.MyConsts.GUIDE_SHORT_FILE;
 import static java.nio.file.Files.writeString;
 /**
  * readGuide() - получить из файла json справочник
@@ -38,6 +39,7 @@ public class GuideParser {
     public static void writeGuideAsString(String fileName, Guide guide, List<String> mainDetails) throws IOException {
         writeString(Paths.get(fileName), GuideService.showGuide(guide, mainDetails), StandardCharsets.UTF_8);
         System.out.println("\nСправочник в текстовом файле - " + fileName);
+        writeString(Paths.get(GUIDE_SHORT_FILE), GuideService.showShortGuide(guide), StandardCharsets.UTF_8);
     }
 
 

@@ -16,11 +16,13 @@ public class MyConsts {
     public final static String DET_IMPORTANCE = GUIDE_DIR + "det-importance.csv";
     public final static String DET_MAIN = GUIDE_DIR + "det-main.csv";
     public final static String DET_NOT_MAIN = GUIDE_DIR + "det-not-main.csv";
-    public final static String GUIDE_FILE_NAME = "Kia-Rio-DE4";
+    public final static String GUIDE_FILE_NAME = "Kia-Rio-QB4";
     public final static String GUIDE_FILE = LIB_DIR + GUIDE_FILE_NAME + ".json";
     public final static String GUIDE_TEXT_FILE = GUIDE_DIR + GUIDE_FILE_NAME + ".txt";
+    public final static String GUIDE_SHORT_FILE = GUIDE_DIR + GUIDE_FILE_NAME + "-short.txt";
     public final static String GUIDE_FILE_100 = LIB_DIR + GUIDE_FILE_NAME + "-100.json";
     public final static String GUIDE_TEXT_FILE_100 = GUIDE_DIR + GUIDE_FILE_NAME + "-100.txt";
+    public final static int SHOW_WRONG = 10;
 
     public final static List<String> COLOR_WORK_NAMES = List.of("ОКР","ВЫКРАС", "КОЛЕР");
     public final static List<String> MAIN_DETS = List.of("БАМП","ДВЕР","ПОДКР","СТЕКЛО","РУЧК","ФОНАР",

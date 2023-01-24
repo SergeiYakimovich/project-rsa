@@ -5,8 +5,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+
+import static code.guide.calc.Calculator.countHoursForNabor;
 
 @Getter
 @Setter
@@ -14,15 +18,14 @@ import java.util.stream.Collectors;
 public class Nabor implements Comparable{
     private TreeSet<String> detNames = new TreeSet<>();
     private Double count = 0.0;
-    private Double min = 0.0;
-    private Double max = 0.0;
+    private Map<String, Double> allVariants = new HashMap<>();
 
-    public Nabor(Collection<String> detNames, Double min, Double max) {
+
+    public Nabor(Collection<String> detNames, Map<String, Double> variants) {
         this.detNames = new TreeSet<>();
         this.detNames.addAll(detNames);
-        this.min = min;
-        this.max = max;
-        this.count = Double.sum(min, max) / 2;
+        this.allVariants = variants;
+        this.count = countHoursForNabor(variants.values());
     }
 
     public void setDetNames(Collection<String> detNames) {

@@ -7,6 +7,7 @@ import code.guide.service.OrderService;
 import code.guide.service.WorkService;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -27,14 +28,27 @@ public class Calculator {
                 return hours + result;
             }
         }
-        for(Map.Entry<String, Double> nabor : guide.getDetSingles().entrySet()) {
+        for(Map.Entry<String, Map<String, Double>> nabor : guide.getDetSingles().entrySet()) {
             List<String> detailNames = List.of(nabor.getKey());
-            Double hours = nabor.getValue();
+            Double hours = countHoursForSingles(nabor.getValue().values());
             if(OrderService.isOrderContainsAll(order, detailNames)) {
                 result += hours;
             }
         }
         return result;
+    }
+
+    public static double countHoursForSingles(Collection<Double> list) {
+        return  list.stream()
+                .mapToDouble(x -> x)
+                .min().getAsDouble();
+    }
+
+    public static double countHoursForNabor(Collection<Double> list) {
+        return  list.stream()
+                .mapToDouble(x -> x)
+                .min().getAsDouble();
+//                .average().getAsDouble();
     }
 
 }

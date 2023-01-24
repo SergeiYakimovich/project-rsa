@@ -8,6 +8,7 @@ import code.guide.element.Order;
 import code.guide.parse.csvtype.CsvDetail;
 import code.guide.parse.DetailsParser;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -15,16 +16,45 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static code.guide.utils.Cli.getMainDet;
+
 
 /**
  * makeUniqDetails() - посчитает уникальные детали c частотой появления в з/н и запишет в файл
  * analizeDetails() - посчитает важность каждой уникальной детали (средняя ошибка справочника без нее) и запишет в файл
  */
 public class DetailUtils {
+    public static void makeNotMainFromMainAndAll() throws IOException {
+        List<String> allDetailNames;
+        try {
+            allDetailNames = DetailsParser.readDetNames(MyConsts.DET_FREQUENCY);
+        } catch (IOException e) {
+            System.out.println("Ошибка чтения из файла " + MyConsts.DET_FREQUENCY);
+            return;
+        }
+        List<String> mainDetails = getMainDet();
+        List<String> notMainDetails = new ArrayList<>();
 
+        for(String detail : allDetailNames) {
+            if(!mainDetails.contains(detail)) {
+                notMainDetails.add(detail);
+            }
+        }
+
+        List<CsvDetail> detList = new ArrayList<>();
+        for(String detail : notMainDetails) {
+            CsvDetail newDetail = new CsvDetail(detail, "1.0");
+            detList.add(newDetail);
+        }
+        DetailsParser.writeDetNames(MyConsts.DET_NOT_MAIN, detList);
+        System.out.println("\n\nНенужные детали в файле - " + MyConsts.DET_NOT_MAIN);
+
+    }
     public static void analizeDetails(List<Order> orders) throws Exception {
         List<String> notMainDetails;
         List<String> allDetailNames = makeUniqDetails(MyConsts.DET_FREQUENCY, orders);
+
+        if(true) return;
 
         Map<String, Double> myMap = new HashMap<>();
         for(String nextDetailName : allDetailNames) {

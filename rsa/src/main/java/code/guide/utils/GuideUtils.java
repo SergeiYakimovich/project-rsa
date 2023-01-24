@@ -5,7 +5,9 @@ import code.guide.element.Nabor;
 import code.guide.element.Order;
 import code.guide.service.OrderService;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static code.guide.utils.MyConsts.GUIDE_FILE;
@@ -28,16 +30,11 @@ public class GuideUtils {
                 .forEach(x -> {
                     Double hours = x.getWorksCount();
                     String name = x.getDetails().get(0).getName();
-                    if(guide.getDetSingles().containsKey(name)) {
-                        hours = Double.min(hours, guide.getDetSingles().get(name));
-                    }
-                    guide.addSingles(name, hours);
-
+                    guide.addSingles(name, Map.of(x.getName(), hours));
                 });
 
         List<List<String>> detailsList = new ArrayList<>();
         List<String> detailsStringList = new ArrayList<>();
-
         for(Order order : orders) {
             List<String> newDetails = order.getDetails().stream()
                     .map(x -> x.getName())
@@ -53,14 +50,12 @@ public class GuideUtils {
         }
         detailsList.sort((x1,x2) -> x2.size() - x1.size());
         for(List<String> details : detailsList) {
-            double[] minmax = countMinMax(orders, details, notMainDetails);
-            Nabor newNabor = new Nabor(details, minmax[0], minmax[1]);
+            Map<String, Double> variants = countVariants(orders, details, notMainDetails);
             if(details.size() == 1) {
                 String name = details.get(0);
-                if(!guide.getDetSingles().containsKey(name)) {
-                    guide.addSingles(name, Double.sum(minmax[0], minmax[1])/2);
-                }
+                guide.addSingles(name, variants);
             } else {
+                Nabor newNabor = new Nabor(details, variants);
                 guide.addNaborSets(newNabor);
             }
         }
@@ -76,14 +71,13 @@ public class GuideUtils {
         return arr[0];
     }
 
-    public static double[] countMinMax(List<Order> orders, List<String> detailNames, List<String> notMainDetails) {
+    public static Map<String, Double> countVariants(List<Order> orders, List<String> detailNames, List<String> notMainDetails) {
         List<Order> ordersContainsNames = OrderService.getOrdersContainsAll(orders, detailNames);
+        Map<String, Double> variants = new HashMap<>();
         if(ordersContainsNames.size() == 0) {
-            return new double[]{0.0, 0.0};
+            return variants;
         }
 
-        Double worksMin = Double.MAX_VALUE;
-        Double worksMax = Double.MIN_VALUE;
         for(Order order : ordersContainsNames) {
             Long detSize = order.getDetails().stream()
                     .map(x -> x.getName())
@@ -91,15 +85,10 @@ public class GuideUtils {
                     .count();
             if(detSize == detailNames.size()) {
                 double newHours = order.getWorksCount();
-                worksMin = Double.min(worksMin, newHours);
-                worksMax = Double.max(worksMax, newHours);
-//                if(worksMax - worksMin > 0.1) {
-//                    System.out.println((order.getName()));
-//                }
+                variants.put(order.getName(), newHours);
             }
         }
-        double[] minmax= new double[]{worksMin, worksMax};
-        return minmax;
+        return variants;
     }
 
     public static boolean isDetailGood(String name, List<String> details) {
@@ -107,7 +96,7 @@ public class GuideUtils {
             return true;
         }
         for(String detName : details) {
-            if(name.contains(detName)) {
+            if(name.equals(detName)) {
                 return false;
             }
         }

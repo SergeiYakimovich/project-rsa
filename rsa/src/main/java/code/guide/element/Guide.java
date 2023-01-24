@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -18,13 +20,20 @@ public class Guide {
 //    List<String> mainDetails;
 //    List<String> notMainDetails;
     private TreeSet<Nabor> detNaborSets = new TreeSet<>(MyComparators.naborComparator);
-    private TreeMap<String, Double> detSingles = new TreeMap<>();
+    private TreeMap<String, Map<String, Double>> detSingles = new TreeMap<>();
 
     public void addNaborSets(Nabor newNabor) {
         detNaborSets.add(newNabor);
     }
-    public void addSingles(String name, Double count) {
-        detSingles.put(name, count);
+    public void addSingles(String name, Map<String, Double> variants) {
+        if(this.detSingles.containsKey(name)) {
+            Map<String, Double> allVariants = this.detSingles.get(name);
+            allVariants.putAll(variants);
+        } else {
+            Map<String, Double> allVariants = new HashMap<>();
+            allVariants.putAll(variants);
+            detSingles.put(name, allVariants);
+        }
     }
 
 }

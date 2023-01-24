@@ -5,6 +5,7 @@ import code.guide.parse.OrderParser;
 import code.guide.parse.XmlParser;
 import code.guide.parse.csvtype.CsvOrder;
 import code.guide.utils.Cli;
+import code.guide.utils.DetailUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import static code.guide.utils.Handler.moveFiles;
 import static code.guide.utils.MyConsts.BASE_URL;
 import static code.guide.utils.MyConsts.ORDERS_DIR;
 import static code.guide.utils.MyConsts.XML_DIR;
@@ -28,6 +30,9 @@ import static java.nio.file.Files.writeString;
 public class App {
     public static void main(String[] args) throws Exception {
         System.setOut(new java.io.PrintStream(System.out, true, "UTF-8"));
+
+//        moveFiles();
+//        DetailUtils.makeNotMainFromMainAndAll();
 
         int n = Cli.getChoice();
         Cli.fulfill(n);
