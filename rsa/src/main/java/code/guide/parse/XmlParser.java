@@ -11,7 +11,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -24,6 +27,7 @@ import static java.nio.file.Files.writeString;
  * convertOrdersFromDirectory() - получить список Csv з/н из директории c XML файлами
  */
 public class XmlParser {
+    final  static Map<String, String> map = getMapNameNumber();
 
     public static boolean convertOrderFromXmlToCsv (String fileName) throws Exception {
 //        System.out.println(fileName);
@@ -32,39 +36,20 @@ public class XmlParser {
 
         String str1 = findDetailsInXml(fileName);
         if(str1 == null || str1.length() == 0) {
-            str1 = "";
-//            System.out.println("З/ч под замену не найдены " + fileName);
+            System.out.println("З/ч не найдены " + fileName);
+            return false;
         } else {
             buffer.append(str1);
         }
 
-        String str2 = findRepaireDetailsInXml(fileName, str1, "<RepTyp>I");
-        if(str2 == null || str2.length() == 0) {
-            str2 = "";
-        } else {
-//            System.out.println(str2);
-            buffer.append(str2);
-        }
-
-        String str3 = findRepaireDetailsInXml(fileName, str1 + str2, "<RepTyp>L");
-        if(str3 == null || str3.length() == 0) {
-            str3 = "";
-        } else {
-//            System.out.println(str3);
-            buffer.append(str3);
-        }
-
-        if(str1 == "" && str2 == "" && str3 == "") {
-            System.out.println("З/ч не найдены " + fileName);
-            return false;
-        }
-
-        String strWorks = findWorksInXml(fileName);
-        if(strWorks == null || strWorks.length() == 0) {
+        Double hours = findWorksInXml(fileName);
+        if(hours == null || hours < 0.001) {
             System.out.println("Работы не найдены " + fileName);
             return false;
         } else {
-            buffer.append(strWorks);
+            String strHours = String.format("%.2f", hours);
+            strHours = strHours.replaceAll(",", ".");
+            buffer.append(";Работы;" + strHours + ";");
         }
 
         String[] mas = fileName.split(Pattern.quote("\\"));
@@ -95,104 +80,166 @@ public class XmlParser {
     public static String findDetailsInXml(String fileName) throws IOException {
         String result = "";
         String str;
+        String repType1 = "<RepTyp>I";
+        String repType2 = "<RepTyp>L";
         File file = new File(fileName);
         BufferedReader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
 
         do {
-            str = reader.readLine();
-        } while((str != null) && !(str.contains("УПР № ")
-                && str.contains(" НАЗВАНИЕ             № ДЕТАЛИ                         СТОИМ"))
-        );
-        if(str == null) {
-            reader.close();
-            return null;
-        }
-        while(!str.contains("----------") && !str.contains("СИСТЕМА AUDATEX")) {
-            str = str.trim();
-            List<String> list = Arrays.stream(str.split(" "))
-                    .map(x -> x.trim())
-                    .filter(x -> !x.isEmpty())
-                    .collect(Collectors.toList());
-            if(list.size() != 0) {
-                String uprNumber = str.substring(0,8).trim();
-                int n = str.length() < 37 ? str.length() : 37;
-                String name = str.substring(16,n).trim().toUpperCase();
-//                String number = str.substring(37,70).trim();
-//                String count = str.substring(8,16).trim();
-//                String sum = str.substring(70,75).trim();
-
-//                System.out.println(str);
-//                System.out.println(uprNumber + " " + name + " " + number);
-                if(name.length() == 1) {
-                    System.out.println("!? : имя з/ч = " + name);
-                }
-                if(!uprNumber.equals("УПР №")) {
-                    result += uprNumber + ";" + name + ";" + "1.0" + ";" + "1.0" + "\n";
-                }
+            do {
+                str = reader.readLine();
+            } while((str != null)
+                    && !(str.contains("УПР № ") && str.contains(" НАЗВАНИЕ             № ДЕТАЛИ                         СТОИМ"))
+                    && !str.contains("</EditedOutput>"));
+            if(str == null) {
+                reader.close();
+                return result;
             }
-            str = reader.readLine();
-        }
-        reader.close();
-        return result;
-    }
-
-    public static String findWorksInXml(String fileName) throws IOException {
-        String result = "";
-        String str;
-        File file = new File(fileName);
-        BufferedReader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
-
-        do {
-            str = reader.readLine();
-        } while((str != null) && !str.contains("СТОИМОСТЬ РАБОТ     НОРМА ВРЕМЕНИ   10 РП = 1 ЧАС"));
-        if(str == null) {
-            reader.close();
-            return null;
-        }
-        str = reader.readLine();
-        List<String> list = Arrays.stream(str.split(" "))
-                .map(x -> x.trim())
-                .filter(x -> !x.isEmpty())
-                .collect(Collectors.toList());
-
-        double hours = Double.parseDouble(list.get(1)) / 10;
-        str = String.format("%.2f", hours);
-        str = str.replaceAll(",", ".");
-        result += ";Работы;" + str + ";";
-
-        reader.close();
-        return result;
-    }
-
-    public static String findRepaireDetailsInXml(String fileName, String details, String repType) throws IOException {
-        String result = "";
-        String str;
-        File file = new File(fileName);
-        BufferedReader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
-
-        do {
-            str = reader.readLine();
-            while((str != null) && str.contains(repType)) {
-                int n = str.indexOf(repType);
-                str = str.substring(n).trim();
-                String[] arr = str.split("[\\>\\<]");
-                String uprNumber = arr[6].trim();
-                String name = arr[10].replace("РЕМОНТИРОВАТЬ","")
-                        .replace("ГЕОМЕТРИЯ","").trim().toUpperCase();
-                if(!result.contains(name) && !details.contains(name)) {
-                    String s;
-                    if(repType.contains(">L")) {
-                        s = "3.0";
-                    } else {
-                        s = "2.0";
+            result = "";
+            if(!str.contains("</EditedOutput>")) {
+                while(str != null && !str.contains("----------") && !str.contains("СИСТЕМА AUDATEX")) {
+                    str = str.trim();
+                    List<String> list = Arrays.stream(str.split(" "))
+                            .map(x -> x.trim())
+                            .filter(x -> !x.isEmpty())
+                            .collect(Collectors.toList());
+                    if(list.size() != 0) {
+                        String uprNumber = str.substring(0,8).trim();
+                        int n = str.length() < 37 ? str.length() : 37;
+                        String name = str.substring(16,n).trim().toUpperCase();
+                        if(name.length() == 1) {
+                            System.out.println("!? : имя з/ч = " + name);
+                        }
+                        if(name.equals("EL")) {
+                            name = changeNameEl(uprNumber,map);
+                        }
+                        if(!uprNumber.equals("УПР №")) {
+                            result += uprNumber + ";" + name + ";" + "1.0" + ";" + "1.0" + "\n";
+                        }
                     }
-                    result += uprNumber + ";" + name + ";" + s + ";" + s + "\n";
+                    str = reader.readLine();
                 }
-                str = str.substring(2);
             }
+
+            do {
+                str = reader.readLine(); // после while перенести
+                while((str != null) && (str.contains(repType1) || str.contains(repType2))) {
+                    int n1 = str.indexOf(repType1);
+                    n1 = n1 == -1 ? Integer.MAX_VALUE : n1;
+                    int n2 = str.indexOf(repType2);
+                    n2 = n2 == -1 ? Integer.MAX_VALUE : n2;
+                    int n = Math.min(n1, n2);
+                    str = str.substring(n).trim();
+                    String[] arr = str.split("[\\>\\<]");
+                    String uprNumber = arr[6].trim();
+                    String name = arr[10].replace("РЕМОНТИРОВАТЬ","")
+                            .replace("ГЕОМЕТРИЯ","")
+                            .replace("ПОЛИРОВ","")
+                            .trim().toUpperCase();
+                    if(name.equals("EL")) {
+                        name = changeNameEl(uprNumber, map);
+                    }
+                    if(!result.contains(name)) {
+                        result += uprNumber + ";" + name + ";2.0;2.0\n";
+                    }
+                    str = str.substring(2);
+                }
+            } while(str != null && !str.contains("<EditedOutput><![CDATA"));
+
         } while(str != null);
 
         reader.close();
         return result;
     }
+
+    public static Double findWorksInXml(String fileName) throws IOException {
+        Double result = 0.0;
+        String str;
+        File file = new File(fileName);
+        BufferedReader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
+
+        do {
+            do {
+                str = reader.readLine();
+            } while((str != null) && !str.contains("СТОИМОСТЬ РАБОТ     НОРМА ВРЕМЕНИ   10 РП = 1 ЧАС"));
+            if(str == null) {
+                reader.close();
+                return result;
+            }
+            str = reader.readLine();
+            List<String> list = Arrays.stream(str.split(" "))
+                    .map(x -> x.trim())
+                    .filter(x -> !x.isEmpty())
+                    .collect(Collectors.toList());
+            result = Double.parseDouble(list.get(1)) / 10;
+
+            do{
+                str = reader.readLine();
+            } while((str != null) && !str.contains("<RepTyp>I") && !str.contains("<EditedOutput><![CDATA"));
+
+            if((str != null) && str.contains("<RepTyp>I")) {
+                while(str.contains("<RepTyp>I")) { // в цикл выше перенести
+                    int n = str.indexOf("<RepTyp>I") + 2;
+                    str = str.substring(n).trim();
+                    if(str.contains("<WuNet Unit=")) {
+                        n = str.indexOf("Val=") + 5;
+                        str = str.substring(n).trim();
+                        String[] arr = str.split("\"");
+                        String strHours = arr[0].trim();
+                        result -= Double.parseDouble(strHours) / 10;
+                    }
+                }
+            }
+
+        } while(str != null);
+
+        reader.close();
+        return result;
+    }
+
+    public static String changeNameEl(String number, Map<String, String> map) {
+        if(map.containsKey(number)) {
+            return map.get(number);
+        } else {
+            return "EL";
+        }
+    }
+
+    public static Map<String, String> getMapNameNumber() {
+        Map<String, String> map = new HashMap<>();
+        map.putAll(Map.of(
+                "1481", "ДВЕРЬ П Л",
+                "2583", "БАМПЕР З",
+                "0283", "БАМПЕР П",
+                "1009", "ПАНЕЛЬ ПЕРЕДКА В СБ",
+                "2227",  "А-СТОЙКА НАР Л",
+                "3482", "БОКОВИНА З ПР",
+                "4280", "ЛОНЖЕРОН ПР ПОЛА",
+                "7201", "КОЛЕСНЫЙ ДИСК П Л",
+                "9552", "КОЛЁСНЫЙ ДИСК З ПР",
+                "0742", "КРЫЛО П ПР"));
+        map.putAll(Map.of(
+                "2931", "КРЫШКА БАГАЖНИКА",
+                "1865", "РУЧКА ДВЕРИ НАР З Л",
+                "2711", "ЩИТОК ЗАДКА",
+                "0410", "РЕШЕТКА РАДИАТОРА В",
+                "0340", "КРОНШ КРЕП БАМПЕРА П",
+                "1782", "ДВЕРЬ З ПР",
+                "0471", "КАПОТ",
+                "2640", "БАЛКА БАМПЕРА З",
+                "2656", "ДТЧ З ВНУ ПР ПАРКОВК",
+                "2655", "ДТЧ З ВНУ Л ПАРКОВКИ"));
+        map.putAll(Map.of(
+                "1482", "ДВЕРЬ П ПР",
+                "2102", "ПОРОГ ДВЕРИ НАР ПР",
+                "3481", "БОКОВИНА З Л",
+                "7202", "КОЛЕСНЫЙ ДИСК П ПР",
+                "0741", "КРЫЛО П Л",
+                "1313", "КРЫШКА БАЧОК",
+                "2654", "ДТЧ З НАР ПР ПАРКОВК",
+                "9551", "КОЛЁСНЫЙ ДИСК З Л"));
+
+        return map;
+    }
+
 }

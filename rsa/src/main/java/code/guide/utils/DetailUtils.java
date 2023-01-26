@@ -24,14 +24,10 @@ import static code.guide.utils.Cli.getMainDet;
  * analizeDetails() - посчитает важность каждой уникальной детали (средняя ошибка справочника без нее) и запишет в файл
  */
 public class DetailUtils {
-    public static void makeNotMainFromMainAndAll() throws IOException {
-        List<String> allDetailNames;
-        try {
-            allDetailNames = DetailsParser.readDetNames(MyConsts.DET_FREQUENCY);
-        } catch (IOException e) {
-            System.out.println("Ошибка чтения из файла " + MyConsts.DET_FREQUENCY);
-            return;
-        }
+    public static void makeNotMainFromMainAndAll(List<Order> orders) throws Exception {
+        List<String> allDetailNames = makeUniqDetails(MyConsts.DET_FREQUENCY, orders).stream()
+                .sorted()
+                .collect(Collectors.toList());
         List<String> mainDetails = getMainDet();
         List<String> notMainDetails = new ArrayList<>();
 
@@ -53,8 +49,6 @@ public class DetailUtils {
     public static void analizeDetails(List<Order> orders) throws Exception {
         List<String> notMainDetails;
         List<String> allDetailNames = makeUniqDetails(MyConsts.DET_FREQUENCY, orders);
-
-        if(true) return;
 
         Map<String, Double> myMap = new HashMap<>();
         for(String nextDetailName : allDetailNames) {

@@ -42,14 +42,15 @@ public class Checker {
     public static void showResults(List<Result> list, int number) {
         System.out.println("\nПроверено на " + list.size() + " з/н");
         System.out.println("Средняя точность в % = " + String.format("%.1f", 100 - countAvrDiffInPercent(list)) + "%");
-        System.out.println("Медианное отклонение в % = "
-                + String.format("%.1f", list.get(list.size() / 2).getDiffInPercent()) + "%");
+//        System.out.println("Медианное отклонение в % = "
+//                + String.format("%.1f", list.get(list.size() / 2).getDiffInPercent()) + "%");
         int countBad = (int) list.stream()
                 .filter(x -> x.getDiff() > 0.01)
                 .count();
         System.out.println("С ошибками = " + countBad + " из " + list.size() + " з/н ("
                 + String.format("%.1f", (double) countBad / list.size() * 100) + "%)");
-        System.out.println("Точно посчитано = " + (list.size() - countBad) + " из " + list.size() + " з/н");
+        System.out.println("Точно посчитано = " + (list.size() - countBad) + " из " + list.size() + " з/н ("
+                + String.format("%.1f", (double) (list.size() - countBad) / list.size() * 100) + "%)");
         System.out.println("Максимальное отклонение :");
         int n = list.size() > number ? number : list.size();
         for(int i = 0; i < n; i++) {

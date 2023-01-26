@@ -16,7 +16,9 @@ public class GuideService {
     public static String showGuide(Guide guide, List<String> mainDetails) {
             StringBuilder builder = new StringBuilder();
             builder.append("Справочник для модели   " + guide.getName() + "\n");
-            builder.append("\nНаборы з/ч :\n");
+            builder.append("\n" + "_".repeat(70));
+            builder.append("\n\nНаборы з/ч :\n");
+            builder.append("_".repeat(70) + "\n");
             int i = 1;
             for(Nabor nabor : guide.getDetNaborSets()) {
                 builder.append("\n№" + i + "\n" + showNabor(nabor, mainDetails));
@@ -24,6 +26,7 @@ public class GuideService {
             }
             builder.append("\n\n\n" + "_".repeat(70));
             builder.append("\n\nОдиночные з/ч :\n");
+            builder.append("_".repeat(70) + "\n");
             i = 1;
             for(Map.Entry<String, Map<String,Double>> nabor : guide.getDetSingles().entrySet()) {
                 Double hours = countHoursForSingles(nabor.getValue().values());

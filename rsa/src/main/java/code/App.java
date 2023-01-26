@@ -1,11 +1,13 @@
 package code;
 
+import code.guide.element.Detail;
 import code.guide.element.Order;
 import code.guide.parse.OrderParser;
 import code.guide.parse.XmlParser;
 import code.guide.parse.csvtype.CsvOrder;
 import code.guide.utils.Cli;
 import code.guide.utils.DetailUtils;
+import code.guide.utils.MyConsts;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,10 +18,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import static code.guide.utils.Handler.checkNameNumber;
 import static code.guide.utils.Handler.moveFiles;
 import static code.guide.utils.MyConsts.BASE_URL;
 import static code.guide.utils.MyConsts.ORDERS_DIR;
@@ -32,7 +37,6 @@ public class App {
         System.setOut(new java.io.PrintStream(System.out, true, "UTF-8"));
 
 //        moveFiles();
-//        DetailUtils.makeNotMainFromMainAndAll();
 
         int n = Cli.getChoice();
         Cli.fulfill(n);

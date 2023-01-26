@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import static code.guide.utils.Handler.checkNameNumber;
 import static code.guide.utils.MyConsts.BASE_URL;
 import static code.guide.utils.MyConsts.GUIDE_FILE;
 import static code.guide.utils.MyConsts.GUIDE_FILE_100;
@@ -46,22 +47,31 @@ public class Cli {
                 orders = OrderParser.getOrdersFromDirectory(MyConsts.ORDERS_DIR, new CsvOrder());
                 DetailUtils.analizeDetails(orders);
                 break;
-            case 3 : //        Создание полной модели (без учета важных и не нужных деталей)
+            case 3 : //        Создать список лишних детали (из всех и важных)
+                orders = OrderParser.getOrdersFromDirectory(MyConsts.ORDERS_DIR, new CsvOrder());
+                DetailUtils.makeNotMainFromMainAndAll(orders);
+                break;
+            case 4 : //        Создание полной модели (без учета важных и не нужных деталей)
                 mainDetails = new ArrayList<>();
                 notMainDetails = new ArrayList<>();
                 makeAndCheck(mainDetails, notMainDetails, GUIDE_FILE_100, GUIDE_TEXT_FILE_100);
                 break;
-            case 4 : //        Создание своей модели (с учетом важных и не нужных деталей)
+            case 5 : //        Создание своей модели (с учетом важных и не нужных деталей)
                 mainDetails = getMainDet();
                 notMainDetails = getNotMainDet();
                 makeAndCheck(mainDetails, notMainDetails, GUIDE_FILE, GUIDE_TEXT_FILE);
                 break;
-            case 5 : //        Проверка на тестовых запросах (тип - текст с разделителями [,;\n])
+            case 6 : //        Проверка на тестовых запросах (тип - текст с разделителями [,;\n])
                 guide = GuideParser.readGuide(GUIDE_FILE_100);
 //                List<Order> orders1 = OrderParser.getOrdersFromDirectory(ORDERS_DIR, new CsvOrder());
 //                orders = OrderParser.getOrdersFromDirectory(TEST_DIR, new CsvRequest());
                 orders = OrderParser.getOrdersFromDirectory(TEST_DIR, new CsvText());
                 Checker.countTestOrders(guide,orders);
+                break;
+            case 7 : //     Проверка соответствия имен и управляющих номеров
+                orders = OrderParser.getOrdersFromDirectory(MyConsts.ORDERS_DIR, new CsvOrder());
+                checkNameNumber(orders,true);
+                checkNameNumber(orders,false);
                 break;
         }
     }
@@ -69,9 +79,11 @@ public class Cli {
     public static int getChoice() {
         System.out.println("\n1 - Конвертация Xml в Csv");
         System.out.println("2 - Проанализировать детали (по частоте и важности)");
-        System.out.println("3 - Создать полный справочник (без учета важных и лишних деталей) и проверить его");
-        System.out.println("4 - Создать свой справочник (с учетом важных и лишних деталей) и проверить его");
-        System.out.println("5 - Проверка справочника на тестовых запросах");
+        System.out.println("3 - Создать список лишних детали (из всех и важных)");
+        System.out.println("4 - Создать полный справочник (без учета важных и лишних деталей) и проверить его");
+        System.out.println("5 - Создать свой справочник (с учетом важных и лишних деталей) и проверить его");
+        System.out.println("6 - Проверка справочника на тестовых запросах");
+        System.out.println("7 - Проверка соответствия имен и управляющих номеров");
         System.out.println("0 - Выход");
         System.out.print("\nВведите число - ");
 

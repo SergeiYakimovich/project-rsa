@@ -4,9 +4,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -16,21 +19,21 @@ import static code.guide.calc.Calculator.countHoursForNabor;
 @Setter
 @NoArgsConstructor
 public class Nabor implements Comparable{
-    private TreeSet<String> detNames = new TreeSet<>();
+    private List<String> detNames = new ArrayList<>();
     private Double count = 0.0;
     private Map<String, Double> allVariants = new HashMap<>();
 
 
     public Nabor(Collection<String> detNames, Map<String, Double> variants) {
-        this.detNames = new TreeSet<>();
-        this.detNames.addAll(detNames);
+        this.detNames = new ArrayList<>();
+        this.detNames.addAll(detNames.stream().sorted().collect(Collectors.toList()));
         this.allVariants = variants;
         this.count = countHoursForNabor(variants.values());
     }
 
     public void setDetNames(Collection<String> detNames) {
-        this.detNames = new TreeSet<>();
-        this.detNames.addAll(detNames);
+        this.detNames = new ArrayList<>();
+        this.detNames.addAll(detNames.stream().sorted().collect(Collectors.toList()));
     }
 
     @Override
@@ -39,9 +42,9 @@ public class Nabor implements Comparable{
         Nabor o1 = this;
         int lengthDifference = o2.getDetNames().size() - o1.getDetNames().size();
         if (lengthDifference != 0) return lengthDifference;
-        String s1 = o1.getDetNames().stream().collect(Collectors.joining());
-        String s2 = o2.getDetNames().stream().collect(Collectors.joining());
-        return s2.compareTo(s1);
+        String s1 = o1.getDetNames().stream().sorted().collect(Collectors.joining());
+        String s2 = o2.getDetNames().stream().sorted().collect(Collectors.joining());
+        return s1.compareTo(s2);
     }
 
     @Override
