@@ -12,6 +12,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @JsonPropertyOrder({"name", "count"})
 public class CsvDetail {
-    private String name;
-    private String count;
+    public String name;
+    public String count;
 }

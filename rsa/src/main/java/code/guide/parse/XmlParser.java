@@ -2,6 +2,8 @@ package code.guide.parse;
 
 import code.guide.element.Order;
 import code.guide.parse.csvtype.CsvElement;
+import code.guide.utils.Cli;
+import code.guide.utils.MyConsts;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,6 +30,8 @@ import static java.nio.file.Files.writeString;
  */
 public class XmlParser {
     final  static Map<String, String> map = getMapNameNumber();
+    static List<String> detMainE = Cli.getMainDetFromFile(MyConsts.DET_MAIN_E);
+
 
     public static boolean convertOrderFromXmlToCsv (String fileName) throws Exception {
 //        System.out.println(fileName);
@@ -105,15 +109,15 @@ public class XmlParser {
                             .collect(Collectors.toList());
                     if(list.size() != 0) {
                         String uprNumber = str.substring(0,8).trim();
-                        int n = str.length() < 37 ? str.length() : 37;
-                        String name = str.substring(16,n).trim().toUpperCase();
-                        if(name.length() == 1) {
-                            System.out.println("!? : имя з/ч = " + name);
-                        }
-                        if(name.equals("EL")) {
-                            name = changeNameEl(uprNumber,map);
-                        }
                         if(!uprNumber.equals("УПР №")) {
+                            uprNumber = normalizeUNumber(uprNumber);
+                            int n = str.length() < 37 ? str.length() : 37;
+                            String name = normalizeName(str.substring(16,n), uprNumber);
+                            String s = MyConsts.IS_NAME_MAIN ? name : uprNumber;
+                            if(detMainE.contains(s)) {
+                                uprNumber += " ЗАМЕНА";
+                                name += " ЗАМЕНА";
+                            }
                             result += uprNumber + ";" + name + ";" + "1.0" + ";" + "1.0" + "\n";
                         }
                     }
@@ -131,15 +135,10 @@ public class XmlParser {
                     int n = Math.min(n1, n2);
                     str = str.substring(n).trim();
                     String[] arr = str.split("[\\>\\<]");
-                    String uprNumber = arr[6].trim();
-                    String name = arr[10].replace("РЕМОНТИРОВАТЬ","")
-                            .replace("ГЕОМЕТРИЯ","")
-                            .replace("ПОЛИРОВ","")
-                            .trim().toUpperCase();
-                    if(name.equals("EL")) {
-                        name = changeNameEl(uprNumber, map);
-                    }
-                    if(!result.contains(name)) {
+                    String uprNumber = normalizeUNumber(arr[6].trim());
+                    String name = normalizeName(arr[10], uprNumber);
+                    String s = MyConsts.IS_NAME_MAIN ? name : uprNumber;
+                    if(!result.contains(s + ";") && ! result.contains(s + " ЗАМЕНА;")) {
                         result += uprNumber + ";" + name + ";2.0;2.0\n";
                     }
                     str = str.substring(2);
@@ -175,10 +174,7 @@ public class XmlParser {
 
             do{
                 str = reader.readLine();
-            } while((str != null) && !str.contains("<RepTyp>I") && !str.contains("<EditedOutput><![CDATA"));
-
-            if((str != null) && str.contains("<RepTyp>I")) {
-                while(str.contains("<RepTyp>I")) { // в цикл выше перенести
+                while((str != null) && str.contains("<RepTyp>I")) {
                     int n = str.indexOf("<RepTyp>I") + 2;
                     str = str.substring(n).trim();
                     if(str.contains("<WuNet Unit=")) {
@@ -189,11 +185,54 @@ public class XmlParser {
                         result -= Double.parseDouble(strHours) / 10;
                     }
                 }
-            }
+            } while((str != null) && !str.contains("<EditedOutput><![CDATA"));
+
+//            if((str != null) && str.contains("<RepTyp>I")) { // в цикл выше перенести
+//                while(str.contains("<RepTyp>I")) {
+//                    int n = str.indexOf("<RepTyp>I") + 2;
+//                    str = str.substring(n).trim();
+//                    if(str.contains("<WuNet Unit=")) {
+//                        n = str.indexOf("Val=") + 5;
+//                        str = str.substring(n).trim();
+//                        String[] arr = str.split("\"");
+//                        String strHours = arr[0].trim();
+//                        result -= Double.parseDouble(strHours) / 10;
+//                    }
+//                }
+//            }
 
         } while(str != null);
 
         reader.close();
+        return result;
+    }
+
+    public static String normalizeUNumber(String un) {
+        String result;
+        if(un.length() < 4) {
+            System.out.println("!? : упр номер = " + un);
+        }
+        result = un.replace("ПОЛУЧИТЬ","")
+                .trim().toUpperCase();
+        if(result.length() == 0) {
+            result = "UNKNOWN";
+        }
+        return result;
+    }
+
+    public static String normalizeName(String name, String uprNumber) {
+        String result;
+        if(name.length() == 1) {
+            System.out.println("!? : имя з/ч = " + name);
+        }
+        if(name.equals("EL")) {
+            result = changeNameEl(uprNumber, map);
+        } else {
+             result = name.replace("РЕМОНТИРОВАТЬ","")
+                    .replace("ГЕОМЕТРИЯ","")
+                    .replace("ПОЛИРОВ","")
+                    .trim().toUpperCase();
+        }
         return result;
     }
 

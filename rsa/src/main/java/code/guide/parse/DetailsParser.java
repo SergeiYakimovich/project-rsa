@@ -27,6 +27,20 @@ import static java.nio.file.Files.writeString;
  */
 public class DetailsParser {
 
+    public static List<CsvDetail> readDetNameNumber(String fileName) throws IOException {
+        Reader myReader = new FileReader(fileName, StandardCharsets.UTF_8);
+        CsvMapper mapper = new CsvMapper();
+        CsvSchema schema = mapper.schemaFor(CsvDetail.class)
+                .withColumnSeparator(';').withSkipFirstDataRow(true);
+        MappingIterator<CsvDetail> iterator = mapper
+                .readerFor(CsvDetail.class)
+                .with(schema)
+                .readValues(myReader);
+        List<CsvDetail> elements = iterator.readAll();
+
+        return elements;
+    }
+
     public static List<String> readDetNames(String fileName) throws IOException {
         Reader myReader = new FileReader(fileName, StandardCharsets.UTF_8);
         CsvMapper mapper = new CsvMapper();

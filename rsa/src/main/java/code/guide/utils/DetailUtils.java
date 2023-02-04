@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static code.guide.utils.Cli.getMainDet;
-
 
 /**
  * makeUniqDetails() - посчитает уникальные детали c частотой появления в з/н и запишет в файл
@@ -28,7 +26,7 @@ public class DetailUtils {
         List<String> allDetailNames = makeUniqDetails(MyConsts.DET_FREQUENCY, orders).stream()
                 .sorted()
                 .collect(Collectors.toList());
-        List<String> mainDetails = getMainDet();
+        List<String> mainDetails = Cli.getMainDets();
         List<String> notMainDetails = new ArrayList<>();
 
         for(String detail : allDetailNames) {
@@ -55,7 +53,7 @@ public class DetailUtils {
             notMainDetails = List.of(nextDetailName);
             Guide guide = GuideUtils.makeGuide(orders, new ArrayList<>(), notMainDetails, "");
             List<Result> list = Checker.checkOrders(guide, orders);
-            Double diff = Checker.countAvrDiffInPercent(list) * list.size();
+            Double diff = Checker.countAvrDiffInPercent(list);
             myMap.put(nextDetailName, diff);
         }
 
@@ -95,7 +93,7 @@ public class DetailUtils {
         for(Order order : orders) {
             List<Detail> details = order.getDetails();
             for(Detail detail : details) {
-                String name = detail.getName();
+                String name = detail.getMain();
                 if(det_Uniq.containsKey(name)) {
                     det_Uniq.put(name, det_Uniq.get(name) + 1);
                 } else {

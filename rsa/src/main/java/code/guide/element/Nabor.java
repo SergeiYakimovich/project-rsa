@@ -15,13 +15,16 @@ import java.util.stream.Collectors;
 
 import static code.guide.calc.Calculator.countHoursForNabor;
 
+/**
+ * класс для описания наборов з/ч
+ */
 @Getter
 @Setter
 @NoArgsConstructor
 public class Nabor implements Comparable{
-    private List<String> detNames = new ArrayList<>();
-    private Double count = 0.0;
-    private Map<String, Double> allVariants = new HashMap<>();
+    private List<String> detNames = new ArrayList<>(); // список имен
+    private Double count = 0.0; // количество н/ч для справочника
+    private Map<String, Double> allVariants = new HashMap<>(); // варианты для расчета в случае коллизий
 
 
     public Nabor(Collection<String> detNames, Map<String, Double> variants) {

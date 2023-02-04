@@ -22,42 +22,7 @@ import static java.nio.file.Files.readString;
  * moveFiles() - автоматический перенос ненужных файлов в другую директорию
  */
 public class Handler {
-    public static void checkNameNumber(List<Order> orders, boolean nameFirst) throws Exception {
-        Map<String, List<String>> nameNumber = new HashMap<>();
-        for(Order order : orders) {
-            for(Detail detail : order.getDetails()) {
-                String val;
-                String key;
-                if(nameFirst) {
-                    val = detail.getName();
-                    key = detail.getNumber();
-                } else {
-                    key = detail.getName();
-                    val = detail.getNumber();
-                }
 
-                if(nameNumber.containsKey(key)) {
-                    if(!nameNumber.get(key).contains(val)) nameNumber.get(key).add(val);
-                } else {
-                    List<String> newList = new ArrayList<>();
-                    newList.add(val);
-                    nameNumber.put(key, newList);
-                }
-            }
-        }
-        if(nameFirst) {
-            System.out.println("\nНеоднозначные номер-имя :");
-        } else {
-            System.out.println("\nНеоднозначные имя-номер :");
-        }
-        for(Map.Entry<String, List<String>> item : nameNumber.entrySet()) {
-            if(item.getValue().size() > 1) {
-                System.out.println(item.getKey() + "\t" + item.getValue());
-            }
-        }
-
-
-    }
 
     public static void moveFiles() throws IOException {
         String text = readString(Paths.get(BASE_URL + "badcsv DX-4.txt"), StandardCharsets.ISO_8859_1);

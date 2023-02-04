@@ -5,6 +5,7 @@ import code.guide.element.Order;
 import code.guide.element.Work;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -35,7 +36,7 @@ public class OrderService {
         }
     }
 
-    public static boolean isOrderContainsAll(Order order, List<String> list) {
+    public static boolean isOrderContainsAll(Order order, Collection<String> list) {
         if(DetailService.isDetailsContainsAll(order.getDetails(), list)) {
             return true;
         } else {

@@ -9,13 +9,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * checkOneOrder() - проверка одного з/н по справочнику
- * checkOrders() - проверка списка з/н по справочнику
- * showResults() - вывод результата проверки
- * countTestOrders() - расчет н/ч для тестовых запросов
+ * Класс для проверки результатов расчетов
  */
 public class Checker {
 
+    /**
+     * сверка с эталоном расчета по справочнику одного з/н
+     * @param guide - справочник
+     * @param order - з/н
+     * @return - объект класса Result с результатом
+     */
     public static Result checkOneOrder(Guide guide, Order order) {
         Result result = new Result();
         Double hours = Calculator.calculate(guide, order);
@@ -28,6 +31,12 @@ public class Checker {
         return result;
     }
 
+    /**
+     * сверка с эталонными значениями расчетов по справочнику для списка з/н
+     * @param guide - справочник
+     * @param orders - список з/н
+     * @return - список объектов класса Result с результатами
+     */
     public static List<Result> checkOrders(Guide guide, List<Order> orders) {
         List<Result> list = new ArrayList<>();
         for(Order order : orders) {
@@ -39,6 +48,11 @@ public class Checker {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * вывод результата проверки
+     * @param list - список объектов класса Result с результатами
+     * @param number - количество худших результатов для показа
+     */
     public static void showResults(List<Result> list, int number) {
         System.out.println("\nПроверено на " + list.size() + " з/н");
         System.out.println("Средняя точность в % = " + String.format("%.1f", 100 - countAvrDiffInPercent(list)) + "%");
@@ -58,6 +72,11 @@ public class Checker {
         }
     }
 
+    /**
+     * расчет н/ч для списка тестовых запросов и вывод результата
+     * @param guide - справочник
+     * @param orders - список тестовых запросов
+     */
     public static void countTestOrders(Guide guide, List<Order> orders) {
         System.out.println("\nРезультаты расчета :");
         for(Order order : orders) {

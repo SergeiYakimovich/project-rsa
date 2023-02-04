@@ -25,11 +25,11 @@ public class GuideUtils {
 //        guide.setNotMainDetails(notMainDetails);
         orders.stream()
                 .filter(x -> x.getDetails().size() == 1
-                        || (x.getDetails().size() == 2 && (x.getDetails().get(1).getName().contains("МЕЛКИЕ ДЕТАЛИ")))
+                        || (x.getDetails().size() == 2 && (x.getDetails().get(1).getMain().contains("МЕЛКИЕ ДЕТАЛИ")))
                 )
                 .forEach(x -> {
                     Double hours = x.getWorksCount();
-                    String name = x.getDetails().get(0).getName();
+                    String name = x.getDetails().get(0).getMain();
                     guide.addSingles(name, Map.of(x.getName(), hours));
                 });
 
@@ -37,7 +37,7 @@ public class GuideUtils {
         List<String> detailsStringList = new ArrayList<>();
         for(Order order : orders) {
             List<String> newDetails = order.getDetails().stream()
-                    .map(x -> x.getName())
+                    .map(x -> x.getMain())
                     .filter(x -> isDetailGood(x, notMainDetails))
                     .sorted()
                     .collect(Collectors.toList());
@@ -80,7 +80,7 @@ public class GuideUtils {
 
         for(Order order : ordersContainsNames) {
             Long detSize = order.getDetails().stream()
-                    .map(x -> x.getName())
+                    .map(x -> x.getMain())
                     .filter(x -> isDetailGood(x, notMainDetails))
                     .count();
             if(detSize == detailNames.size()) {

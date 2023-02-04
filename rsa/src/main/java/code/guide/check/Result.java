@@ -4,16 +4,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Результат проверки справочника для з/н
+ * Класс для хранения результата расчета н/ч по справочнику
  */
 @Getter
 @Setter
 public class Result {
 
-    private Double hours;
-    private Double expected;
-    private Double diffInPercent;
-    private Double diff;
+    private Double hours; // результат
+    private Double expected; // эталон
+    private Double diffInPercent; // разница в %
+    private Double diff; // разница с эталоном
     private String orderName;
 
     @Override

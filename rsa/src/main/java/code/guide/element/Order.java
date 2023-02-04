@@ -5,16 +5,19 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * класс для описания з/н
+ */
 @Getter
 @Setter
 public class Order {
 
     private String company;
     private String car;
-    private String name;
+    private String name; // имя з/н (= имя файла)
 
-    private List<Work> works;
-    private List<Detail> details;
+    private List<Work> works; // список работ
+    private List<Detail> details; // список деталей
 
     @Override
     public String toString() {
@@ -24,7 +27,9 @@ public class Order {
                 " }\n";
     }
 
-    // стоимость всех деталей
+    /**
+     * @return стоимость всех деталей
+     */
     public Double getDetailsSum() {
         Double result = 0.0;
         for(Detail detail : this.details) {
@@ -33,7 +38,10 @@ public class Order {
         return result;
     }
 
-    // количество деталей
+    /**
+     *
+     * @return количество деталей
+     */
     public Double getDetailsCount() {
         Double result = 0.0;
         for(Detail detail : this.details) {
@@ -42,7 +50,9 @@ public class Order {
         return result;
     }
 
-    // количество (сумма) н/ч
+    /**
+     * @return количество (= сумма) н/ч
+     */
     public Double getWorksCount() {
         Double result = 0.0;
         for(Work work : this.works) {
@@ -51,6 +61,10 @@ public class Order {
         return result;
     }
 
+    /**
+     * проверка на з/н на отстутствие работ-з/ч
+     * @return true, если пустой
+     */
     public Boolean isOrderEmpty() {
         if(details.size() == 0 && works.size() == 0) {
             return true;

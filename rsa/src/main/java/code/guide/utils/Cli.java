@@ -7,7 +7,9 @@ import code.guide.element.Order;
 import code.guide.parse.DetailsParser;
 import code.guide.parse.GuideParser;
 import code.guide.parse.OrderParser;
+import code.guide.parse.PaintParser;
 import code.guide.parse.XmlParser;
+import code.guide.parse.csvtype.CsvDetail;
 import code.guide.parse.csvtype.CsvOrder;
 import code.guide.parse.csvtype.CsvText;
 
@@ -15,8 +17,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
-import static code.guide.utils.Handler.checkNameNumber;
 import static code.guide.utils.MyConsts.BASE_URL;
 import static code.guide.utils.MyConsts.GUIDE_FILE;
 import static code.guide.utils.MyConsts.GUIDE_FILE_100;
@@ -57,21 +59,22 @@ public class Cli {
                 makeAndCheck(mainDetails, notMainDetails, GUIDE_FILE_100, GUIDE_TEXT_FILE_100);
                 break;
             case 5 : //        Создание своей модели (с учетом важных и не нужных деталей)
-                mainDetails = getMainDet();
+                mainDetails = getMainDets();
                 notMainDetails = getNotMainDet();
                 makeAndCheck(mainDetails, notMainDetails, GUIDE_FILE, GUIDE_TEXT_FILE);
                 break;
             case 6 : //        Проверка на тестовых запросах (тип - текст с разделителями [,;\n])
-                guide = GuideParser.readGuide(GUIDE_FILE_100);
-//                List<Order> orders1 = OrderParser.getOrdersFromDirectory(ORDERS_DIR, new CsvOrder());
-//                orders = OrderParser.getOrdersFromDirectory(TEST_DIR, new CsvRequest());
+                guide = GuideParser.readGuide(GUIDE_FILE);
                 orders = OrderParser.getOrdersFromDirectory(TEST_DIR, new CsvText());
                 Checker.countTestOrders(guide,orders);
                 break;
             case 7 : //     Проверка соответствия имен и управляющих номеров
                 orders = OrderParser.getOrdersFromDirectory(MyConsts.ORDERS_DIR, new CsvOrder());
-                checkNameNumber(orders,true);
-                checkNameNumber(orders,false);
+                NameUprNumberUtils.checkNameNumber(orders,true);
+                NameUprNumberUtils.checkNameNumber(orders,false);
+                break;
+            case 8 : //        Конвертация Xml в Csv
+                PaintParser.convertOrdersFromDirectory(XML_DIR);
                 break;
         }
     }
@@ -84,6 +87,7 @@ public class Cli {
         System.out.println("5 - Создать свой справочник (с учетом важных и лишних деталей) и проверить его");
         System.out.println("6 - Проверка справочника на тестовых запросах");
         System.out.println("7 - Проверка соответствия имен и управляющих номеров");
+        System.out.println("8 - Конвертация Xml в Csv (покраска)");
         System.out.println("0 - Выход");
         System.out.print("\nВведите число - ");
 
@@ -97,21 +101,42 @@ public class Cli {
                                      String guideTextFile) throws Exception {
         List<Order> orders = OrderParser.getOrdersFromDirectory(MyConsts.ORDERS_DIR, new CsvOrder());
         Guide guide = GuideUtils.makeGuide(orders, mainDetails, notMainDetails, guideFile);
+        NameUprNumberUtils.makeMapNameNumber();
         GuideParser.writeGuide(guideFile, guide);
         GuideParser.writeGuideAsString(guideTextFile, guide, mainDetails);
         List<Result> results = Checker.checkOrders(guide, orders);
         Checker.showResults(results, SHOW_WRONG);
     }
 
-    public static List<String> getMainDet() {
-        List<String> mainDetails;
+    public static List<String> getMainDets() {
+        List<String> mainDetails = new ArrayList<>();
+
+        List<String> list1 = getMainDetFromFile(MyConsts.DET_MAIN);
+        mainDetails.addAll(list1);
+
+        List<String> list2 = getMainDetFromFile(MyConsts.DET_MAIN_E);
+        list2 = list2.stream()
+                .map(x -> x + " ЗАМЕНА")
+                .collect(Collectors.toList());
+        mainDetails.addAll(list2);
+
+
+        return mainDetails;
+    }
+    public static List<String> getMainDetFromFile(String fileName) {
+        List<CsvDetail> elements;
+
         try {
-            mainDetails = DetailsParser.readDetNames(MyConsts.DET_MAIN);
+            elements = DetailsParser.readDetNameNumber(fileName);
         } catch (IOException e) {
-            System.out.println("Ошибка чтения из файла " + MyConsts.DET_MAIN);
+            System.out.println("Ошибка чтения из файла " + fileName);
             return new ArrayList<>();
         }
-        return mainDetails;
+
+        return elements.stream()
+                .map(x -> MyConsts.IS_NAME_MAIN ? x.getName() : x.getCount())
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     public static List<String> getNotMainDet() {
