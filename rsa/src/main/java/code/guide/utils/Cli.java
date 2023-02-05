@@ -4,9 +4,11 @@ import code.guide.check.Checker;
 import code.guide.check.Result;
 import code.guide.element.Guide;
 import code.guide.element.Order;
+import code.guide.element.PaintGuide;
 import code.guide.parse.DetailsParser;
 import code.guide.parse.GuideParser;
 import code.guide.parse.OrderParser;
+import code.guide.parse.PaintGuideParser;
 import code.guide.parse.PaintParser;
 import code.guide.parse.XmlParser;
 import code.guide.parse.csvtype.CsvDetail;
@@ -19,15 +21,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-import static code.guide.utils.MyConsts.BASE_URL;
-import static code.guide.utils.MyConsts.GUIDE_FILE;
-import static code.guide.utils.MyConsts.GUIDE_FILE_100;
-import static code.guide.utils.MyConsts.GUIDE_TEXT_FILE;
-import static code.guide.utils.MyConsts.GUIDE_TEXT_FILE_100;
-import static code.guide.utils.MyConsts.ORDERS_DIR;
-import static code.guide.utils.MyConsts.SHOW_WRONG;
-import static code.guide.utils.MyConsts.TEST_DIR;
-import static code.guide.utils.MyConsts.XML_DIR;
+import static code.guide.utils.MyConsts.*;
 
 /**
  * getChoice() - выдать варианты и получить выбор пользователя
@@ -73,8 +67,16 @@ public class Cli {
                 NameUprNumberUtils.checkNameNumber(orders,true);
                 NameUprNumberUtils.checkNameNumber(orders,false);
                 break;
-            case 8 : //        Конвертация Xml в Csv
+            case 8 : // Покраска конвертация Xml в Csv
                 PaintParser.convertOrdersFromDirectory(XML_DIR);
+                break;
+            case 9 : // Покраска создание полной модели (без учета важных и не нужных деталей)
+                mainDetails = new ArrayList<>();
+                notMainDetails = new ArrayList<>();
+                orders = OrderParser.getOrdersFromDirectory(MyConsts.PAINT_ORDERS_DIR, new CsvOrder());
+                DetailUtils.makeUniqDetails(MyConsts.PAINT_DET_FREQUENCY, orders);
+                PaintGuide paintGuide = PaintGuideUtils.makePaintGuide(orders, mainDetails, notMainDetails, PAINT_GUIDE_TEXT_FILE);
+                PaintGuideParser.writeGuideAsString(PAINT_GUIDE_TEXT_FILE, paintGuide, mainDetails);
                 break;
         }
     }
@@ -87,7 +89,8 @@ public class Cli {
         System.out.println("5 - Создать свой справочник (с учетом важных и лишних деталей) и проверить его");
         System.out.println("6 - Проверка справочника на тестовых запросах");
         System.out.println("7 - Проверка соответствия имен и управляющих номеров");
-        System.out.println("8 - Конвертация Xml в Csv (покраска)");
+        System.out.println("8 - Покраска - конвертация Xml в Csv");
+        System.out.println("9 - Покраска - создание справочника");
         System.out.println("0 - Выход");
         System.out.print("\nВведите число - ");
 

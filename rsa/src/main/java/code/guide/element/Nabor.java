@@ -21,8 +21,7 @@ import static code.guide.calc.Calculator.countHoursForNabor;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Nabor implements Comparable{
-    private List<String> detNames = new ArrayList<>(); // список имен
+public class Nabor extends SimpleNabor {
     private Double count = 0.0; // количество н/ч для справочника
     private Map<String, Double> allVariants = new HashMap<>(); // варианты для расчета в случае коллизий
 
@@ -32,22 +31,6 @@ public class Nabor implements Comparable{
         this.detNames.addAll(detNames.stream().sorted().collect(Collectors.toList()));
         this.allVariants = variants;
         this.count = countHoursForNabor(variants.values());
-    }
-
-    public void setDetNames(Collection<String> detNames) {
-        this.detNames = new ArrayList<>();
-        this.detNames.addAll(detNames.stream().sorted().collect(Collectors.toList()));
-    }
-
-    @Override
-    public int compareTo(Object o) {
-        Nabor o2 = (Nabor) o;
-        Nabor o1 = this;
-        int lengthDifference = o2.getDetNames().size() - o1.getDetNames().size();
-        if (lengthDifference != 0) return lengthDifference;
-        String s1 = o1.getDetNames().stream().sorted().collect(Collectors.joining());
-        String s2 = o2.getDetNames().stream().sorted().collect(Collectors.joining());
-        return s1.compareTo(s2);
     }
 
     @Override

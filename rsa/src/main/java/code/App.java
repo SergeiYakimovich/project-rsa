@@ -38,6 +38,10 @@ public class App {
 //        moveFiles();
 //        OrderUtils.rangeOrders();
 
+//        List<Order> orders = OrderParser.getOrdersFromDirectory(MyConsts.PAINT_ORDERS_DIR, new CsvOrder());
+//        DetailUtils.makeUniqDetails(MyConsts.PAINT_DET_FREQUENCY, orders);
+
+
         int n = Cli.getChoice();
         Cli.fulfill(n);
 

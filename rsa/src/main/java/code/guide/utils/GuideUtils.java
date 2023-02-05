@@ -62,7 +62,7 @@ public class GuideUtils {
         return guide;
     }
 
-    private static String getNameFromFileName(String fileName) {
+    public static String getNameFromFileName(String fileName) {
         if(fileName.isEmpty()) {
             return "";
         }
