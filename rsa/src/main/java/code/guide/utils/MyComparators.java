@@ -5,7 +5,14 @@ import code.guide.element.SimpleNabor;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
+/**
+ * компараторы
+ */
 public class MyComparators {
+
+    /**
+     * компаратор для набора - сначала по к-ву элементов, потом по отсортированному списку имен
+     */
     public static Comparator<SimpleNabor> naborComparator = new Comparator<SimpleNabor>() {
         @Override
         public int compare(SimpleNabor o1, SimpleNabor o2) {

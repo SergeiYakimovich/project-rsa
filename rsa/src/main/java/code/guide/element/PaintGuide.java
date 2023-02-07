@@ -11,6 +11,9 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+/**
+ * класс для описания справочника покраски
+ */
 @Getter
 @Setter
 public class PaintGuide {

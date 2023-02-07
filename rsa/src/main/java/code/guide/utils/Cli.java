@@ -24,11 +24,15 @@ import java.util.stream.Collectors;
 import static code.guide.utils.MyConsts.*;
 
 /**
- * getChoice() - выдать варианты и получить выбор пользователя
- * fulfill() - выполнить выбранные действия
+ * класс для коммуникации с пользователем (получение выбора пользователя и запуск программ по его выбору)
  */
 public class Cli {
 
+    /**
+     * выполнить выбранные пользователем действия
+     * @param n - выбор пользователя
+     * @throws Exception
+     */
     public static void fulfill(int n) throws Exception {
         List<Order> orders;
         List<Result> results;
@@ -73,6 +77,7 @@ public class Cli {
             case 9 : // Покраска создание полной модели (без учета важных и не нужных деталей)
                 mainDetails = new ArrayList<>();
                 notMainDetails = new ArrayList<>();
+                MyConsts.IS_NAME_MAIN = true;
                 orders = OrderParser.getOrdersFromDirectory(MyConsts.PAINT_ORDERS_DIR, new CsvOrder());
                 DetailUtils.makeUniqDetails(MyConsts.PAINT_DET_FREQUENCY, orders);
                 PaintGuide paintGuide = PaintGuideUtils.makePaintGuide(orders, mainDetails, notMainDetails, PAINT_GUIDE_TEXT_FILE);
@@ -81,6 +86,10 @@ public class Cli {
         }
     }
 
+    /**
+     * выдать варианты действий и получить выбор пользователя
+     * @return - выбор пользователя
+     */
     public static int getChoice() {
         System.out.println("\n1 - Конвертация Xml в Csv");
         System.out.println("2 - Проанализировать детали (по частоте и важности)");
@@ -100,6 +109,14 @@ public class Cli {
         return n;
     }
 
+    /**
+     * создать справочник и проверить его на всех данных
+     * @param mainDetails - список важных деталей
+     * @param notMainDetails  - список не важных деталей
+     * @param guideFile - имя json файла для справочника
+     * @param guideTextFile - имя текстового файла для справочника
+     * @throws Exception
+     */
     private static void makeAndCheck(List<String> mainDetails, List<String> notMainDetails, String guideFile,
                                      String guideTextFile) throws Exception {
         List<Order> orders = OrderParser.getOrdersFromDirectory(MyConsts.ORDERS_DIR, new CsvOrder());
@@ -111,6 +128,10 @@ public class Cli {
         Checker.showResults(results, SHOW_WRONG);
     }
 
+    /**
+     * получение списка важных деталей из 2-х файлов (DET_MAIN и DET_MAIN_E)
+     * @return - список важных деталей
+     */
     public static List<String> getMainDets() {
         List<String> mainDetails = new ArrayList<>();
 
@@ -126,6 +147,12 @@ public class Cli {
 
         return mainDetails;
     }
+
+    /**
+     * получение списка важных деталей из файла
+     * @param fileName - имя файла
+     * @return - список важных деталей
+     */
     public static List<String> getMainDetFromFile(String fileName) {
         List<CsvDetail> elements;
 
@@ -142,6 +169,10 @@ public class Cli {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * получение списка лишних деталей из файла DET_NOT_MAIN
+     * @return - список лишних деталей
+     */
     public static List<String> getNotMainDet() {
         List<String> notMainDetails;
         try {

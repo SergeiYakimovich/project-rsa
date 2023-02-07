@@ -12,6 +12,9 @@ import java.util.stream.Collectors;
 
 import static code.guide.calc.Calculator.countHoursForNabor;
 
+/**
+ * класс для описания наборов з/ч при покраске
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,7 +28,8 @@ public class PaintNabor extends SimpleNabor {
     double colorCost;
     Map<String, Double> variantsColorCost = new HashMap<>();
 
-    public PaintNabor(Collection<String> detNames, Map<String, Double> variantsPrepareHours, Map<String, Double> variantsColorHours, Map<String, Double> variantsColorCost) {
+    public PaintNabor(Collection<String> detNames, Map<String, Double> variantsPrepareHours,
+                      Map<String, Double> variantsColorHours, Map<String, Double> variantsColorCost) {
         this.detNames = new ArrayList<>();
         this.detNames.addAll(detNames.stream().sorted().collect(Collectors.toList()));
 

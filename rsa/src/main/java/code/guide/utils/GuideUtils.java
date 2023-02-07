@@ -13,10 +13,19 @@ import java.util.stream.Collectors;
 import static code.guide.utils.MyConsts.GUIDE_FILE;
 
 /**
- * makeGuide() - создание справочника
+ * класс для создания справочника
  */
 public class GuideUtils {
 
+    /**
+     * создание справочника
+     * @param orders - список з/н
+     * @param mainDetails - список важных деталей
+     * @param notMainDetails - список лишних деталей
+     * @param fileName - имя файла
+     * @return - справочник
+     * @throws Exception
+     */
     public static Guide makeGuide(List<Order> orders, List<String> mainDetails,
                                   List<String> notMainDetails, String fileName) throws Exception{
         Guide guide = new Guide();
@@ -62,6 +71,11 @@ public class GuideUtils {
         return guide;
     }
 
+    /**
+     * получение имени справочника из имени файла
+     * @param fileName - имя файла
+     * @return - имя справочника
+     */
     public static String getNameFromFileName(String fileName) {
         if(fileName.isEmpty()) {
             return "";
@@ -71,6 +85,13 @@ public class GuideUtils {
         return arr[0];
     }
 
+    /**
+     * расчет возможных вариантов при коллизиях
+     * @param orders - список з/н
+     * @param detailNames - список имен деталей, которые должен содержать з/н
+     * @param notMainDetails - список лишних деталей
+     * @return - map (имя з/н : к-во н/ч)
+     */
     public static Map<String, Double> countVariants(List<Order> orders, List<String> detailNames, List<String> notMainDetails) {
         List<Order> ordersContainsNames = OrderService.getOrdersContainsAll(orders, detailNames);
         Map<String, Double> variants = new HashMap<>();
@@ -91,6 +112,12 @@ public class GuideUtils {
         return variants;
     }
 
+    /**
+     * проверка входит ли имя детали в список лишних
+     * @param name - имя детали
+     * @param details - список имен лишних деталей
+     * @return true, если не входит
+     */
     public static boolean isDetailGood(String name, List<String> details) {
         if(details.size() == 0) {
             return true;

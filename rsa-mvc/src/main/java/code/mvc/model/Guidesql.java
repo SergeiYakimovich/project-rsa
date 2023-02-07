@@ -8,6 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 
+/**
+ * справочник - сущность для БД
+ */
 @Transactional
 @Proxy(lazy=false)
 @Getter

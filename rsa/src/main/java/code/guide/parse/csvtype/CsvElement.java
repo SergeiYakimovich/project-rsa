@@ -6,6 +6,9 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * базовый (родительский) класс для описания деталей
+ */
 @Getter
 @Setter
 public abstract class CsvElement {

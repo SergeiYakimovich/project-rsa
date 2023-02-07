@@ -19,12 +19,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * контроллер для расчета н/ч по справочнику
+ */
 @AllArgsConstructor
 @Controller
 @RequestMapping("/count")
 public class CountController {
     private final GuidesqlRepository guidesqlRepository;
 
+    /**
+     * основная страница
+     */
     @GetMapping
     public String show(Model model) {
         List<String> cars = guidesqlRepository.findAllNames();
@@ -32,6 +38,16 @@ public class CountController {
         return "countPage";
     }
 
+    /**
+     * расчет н/ч по справочнику для заданного списка з/ч (файл или текст в поле ввода)
+     * @param name - имя справочника
+     * @param fileName - имя файла
+     * @param fileText - текст из файла
+     * @param text - текст из поля для ввода
+     * @param model - модель
+     * @return - к-во н/ч
+     * @throws IOException
+     */
     @PostMapping
     public String count(String name, String fileName, String fileText, String text, Model model) throws IOException {
         Guidesql guidesql = guidesqlRepository.findByName(name).get();

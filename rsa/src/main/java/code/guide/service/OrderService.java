@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
+ * класс для работы с з/н
  * makeOrder() - создать пустой з/н (имя и пустые списки з/ч и работ)
  * makeSimpleOrder() - создать з/н из списка имен з/ч
  */
@@ -22,12 +23,24 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * получить список з/н содержащих все имена деталей
+     * @param orders - первоначальный список з/н
+     * @param list - список имен з/ч
+     * @return - отфильтрованный список з/н
+     */
     public static List<Order> getOrdersContainsAll(List<Order> orders, List<String> list) {
         return orders.stream()
                 .filter(x -> isOrderContainsAll(x, list))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * проверка содержит ли з/н имя з/ч
+     * @param order - з/н
+     * @param str - имя з/ч
+     * @return - true, если содержит
+     */
     public static boolean isOrderContainsDetail(Order order, String str) {
         if(DetailService.isDetailsContains(order.getDetails(), str)) {
             return true;
@@ -36,6 +49,12 @@ public class OrderService {
         }
     }
 
+    /**
+     * проверка содержит ли з/н все имена з/ч
+     * @param order - з/н
+     * @param list - список имен з/ч
+     * @return - true, если содержит
+     */
     public static boolean isOrderContainsAll(Order order, Collection<String> list) {
         if(DetailService.isDetailsContainsAll(order.getDetails(), list)) {
             return true;
@@ -50,6 +69,12 @@ public class OrderService {
         }
     }
 
+    /**
+     * создать з/н из списка имен з/ч
+     * @param elements - список имен з/ч
+     * @param fileName - имя файла
+     * @return - з/н
+     */
     public static Order makeSimpleOrder(List<String> elements, String fileName) {
         Order result = makeOrder(fileName);
         List<Detail> details = new ArrayList<>();
@@ -65,6 +90,11 @@ public class OrderService {
         return result;
     }
 
+    /**
+     * создать пустой з/н
+     * @param str - имя файла
+     * @return - пустой з/н
+     */
     public static Order makeOrder(String str) {
         Order order = new Order();
         order.setDetails(new ArrayList<>());

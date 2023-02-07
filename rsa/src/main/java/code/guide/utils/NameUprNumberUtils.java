@@ -12,9 +12,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * класс для работы с именами и управляющими номерами з/ч
+ */
 public class NameUprNumberUtils {
     public static Map<String, String> mapNameNumber = new HashMap<>();
 
+    /**
+     * создание мап с именами и управляющими номерами из списков важных деталей
+     * @throws IOException
+     */
     public static void makeMapNameNumber() throws IOException {
         List<CsvDetail> elements = DetailsParser.readDetNameNumber(MyConsts.DET_MAIN);
         List<CsvDetail> elementE = DetailsParser.readDetNameNumber(MyConsts.DET_MAIN_E);
@@ -37,6 +44,12 @@ public class NameUprNumberUtils {
         }
     }
 
+    /**
+     * создание мап с именами и управляющими номерами из всех з/н
+     * @param orders - список з/н
+     * @param nameFirst - true, если ключом будет имя
+     * @return - мап (ключ : список значений для ключа)
+     */
     public static Map<String, List<String>> getNameNumber(List<Order> orders, boolean nameFirst) {
         Map<String, List<String>> nameNumber = new HashMap<>();
         for(Order order : orders) {
@@ -63,6 +76,11 @@ public class NameUprNumberUtils {
         return nameNumber;
     }
 
+    /**
+     * проверка на соответствие имен и управляющих номеров з/ч и выдача коллизий (больше 1 варианта)
+     * @param orders - список з/н
+     * @param nameFirst - true, если ключом будет имя з/ч
+     */
     public static void checkNameNumber(List<Order> orders, boolean nameFirst) {
         Map<String, List<String>> nameNumber = getNameNumber(orders, nameFirst);
         if(!nameFirst) {

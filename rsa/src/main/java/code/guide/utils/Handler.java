@@ -19,11 +19,14 @@ import static code.guide.utils.MyConsts.ORDERS_DIR;
 import static java.nio.file.Files.readString;
 
 /**
- * moveFiles() - автоматический перенос ненужных файлов в другую директорию
+ * класс для прочих действий/расчетов
  */
 public class Handler {
 
-
+    /**
+     * автоматический перенос ненужных файлов в другую директорию
+     * @throws IOException
+     */
     public static void moveFiles() throws IOException {
         String text = readString(Paths.get(BASE_URL + "badcsv DX-4.txt"), StandardCharsets.ISO_8859_1);
         File[] files = new File(ORDERS_DIR).listFiles();
@@ -35,7 +38,11 @@ public class Handler {
         }
     }
 
-
+    /**
+     * расчет к-ва возможных комбинаций з/ч
+     * @param n - к-во з/ч
+     * @return - к-во комбинаций
+     */
     public static int countVariants(int n) {
         int sum = 0;
         for(int i = 1; i <=n; i++) {
@@ -51,7 +58,5 @@ public class Handler {
             return n * factorial(n - 1);
         }
     }
-
-
 
 }

@@ -14,7 +14,17 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import static java.nio.file.Files.writeString;
 
+/**
+ * класс для парсинга данных по покраске от страховых компаний
+ */
 public class PaintParser {
+
+    /**
+     * получить Csv з/н из файла страховой
+     * @param fileName - имя файла
+     * @return - true, если получилось распарсить и записать в csv файл
+     * @throws Exception
+     */
     public static boolean convertOrderFromXmlToCsv (String fileName) throws Exception {
 //        System.out.println(fileName);
         StringBuffer buffer = new StringBuffer();
@@ -45,6 +55,11 @@ public class PaintParser {
         return true;
     }
 
+    /**
+     * распарсить файлы из директории
+     * @param dir - директория
+     * @throws Exception
+     */
     public static void convertOrdersFromDirectory(String dir) throws Exception {
         File[] files = new File(dir).listFiles();
         int good = 0, bad = 0;
@@ -63,6 +78,12 @@ public class PaintParser {
         System.out.println("Сковертировано=" + good + " из " + files.length + " Ошибок=" + bad);
     }
 
+    /**
+     * получить данные по покраске (з/ч и работы)
+     * @param fileName - имя файла
+     * @return - данные по покраске
+     * @throws IOException
+     */
     public static String findPaintInXml(String fileName) throws IOException {
         String result = "";
         String str;
@@ -88,19 +109,18 @@ public class PaintParser {
             str = reader.readLine();
             str = reader.readLine();
             str = reader.readLine();
-            str = reader.readLine();
+            str = reader.readLine().trim();
+            if(str.length() == 0 || str.contains("ЕЩЕ ОСТАЛАСЬ")
+                    || str.contains("АКРИЛОВ ОКРАСКА")
+                    || str.contains("ПРОЗР КРАСКА")
+                    || str.contains("МОКРЫМ ПО МО")) {
+                str = reader.readLine();
+            }
             while(str != null && !str.contains("ЛАКОКРАСОЧНЫЙ МАТЕРИАЛ ЗА ДЕТАЛЬ")
                     && !str.contains("СИСТЕМА AUDATEX")
                     && !str.contains("ЗАТРАТЫ ВРЕМЕНИ НА ОКРАСКУ")) {
                 str = str.trim();
-                List<String> list = Arrays.stream(str.split(" "))
-                        .map(x -> x.trim())
-                        .filter(x -> !x.isEmpty())
-                        .collect(Collectors.toList());
-                if(list.size() != 0 && !str.contains("ЕЩЕ ОСТАЛАСЬ")
-                        && !str.contains("АКРИЛОВ ОКРАСКА")
-                        && !str.contains("ПРОЗР КРАСКА")
-                        && !str.contains("МОКРЫМ ПО МО")) {
+                if(str.length() != 0) {
                     if(str.length() > 15) {
                         uprNumber = str.substring(0,5).trim();
                         name = str.substring(5,str.length() - 5).trim();
@@ -213,45 +233,4 @@ public class PaintParser {
         return result;
     }
 
-    public static Double findWorksInXml(String fileName) throws IOException {
-        Double result = 0.0;
-        String str;
-        File file = new File(fileName);
-        BufferedReader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
-
-        do {
-            do {
-                str = reader.readLine();
-            } while((str != null) && !str.contains("СТОИМОСТЬ РАБОТ     НОРМА ВРЕМЕНИ   10 РП = 1 ЧАС"));
-            if(str == null) {
-                reader.close();
-                return result;
-            }
-            str = reader.readLine();
-            List<String> list = Arrays.stream(str.split(" "))
-                    .map(x -> x.trim())
-                    .filter(x -> !x.isEmpty())
-                    .collect(Collectors.toList());
-            result = Double.parseDouble(list.get(1)) / 10;
-
-            do{
-                str = reader.readLine();
-                while((str != null) && str.contains("<RepTyp>I")) {
-                    int n = str.indexOf("<RepTyp>I") + 2;
-                    str = str.substring(n).trim();
-                    if(str.contains("<WuNet Unit=")) {
-                        n = str.indexOf("Val=") + 5;
-                        str = str.substring(n).trim();
-                        String[] arr = str.split("\"");
-                        String strHours = arr[0].trim();
-                        result -= Double.parseDouble(strHours) / 10;
-                    }
-                }
-            } while((str != null) && !str.contains("<EditedOutput><![CDATA"));
-
-        } while(str != null);
-
-        reader.close();
-        return result;
-    }
 }

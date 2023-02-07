@@ -17,7 +17,14 @@ import java.util.stream.Collectors;
 
 import static java.nio.file.Files.writeString;
 
+/**
+ * класс для обработки з/н
+ */
+
 public class OrderUtils {
+    /**
+     * задание диапазонов
+     */
     public enum Range {
         RANGE1(0,1),
         RANGE2(1, 2),
@@ -65,6 +72,10 @@ public class OrderUtils {
         }
     }
 
+    /**
+     * ранжирование з/ч по диапазонам н/ч в з/н
+     * @throws Exception
+     */
     public static void rangeOrders() throws Exception {
         Map<Range, Set<String>> rangeMap = new TreeMap<>();
         NameUprNumberUtils.makeMapNameNumber();

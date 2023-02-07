@@ -11,8 +11,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * класс для работы со справочниками покраски
+ */
 public class PaintGuideService {
 
+    /**
+     * перевести справочник покраски в текстовый вид
+     * @param guide - справочник
+     * @param mainDetails - список основных деталей
+     * @return справочник в виде текста
+     */
     public static String showPaintGuide(PaintGuide guide, List<String> mainDetails) {
         StringBuilder builder = new StringBuilder();
         builder.append("Справочник для модели   " + guide.getName() + "\n");
@@ -29,6 +38,12 @@ public class PaintGuideService {
         return builder.toString();
     }
 
+    /**
+     * вывести набор з/ч
+     * @param nabor - набор з/ч
+     * @param mainDetails - список основных деталей
+     * @return набор з/ч в виде текста с разбивкой на столбцы и строки
+     */
     private static String showPaintNabor(PaintNabor nabor, List<String> mainDetails) {
         List<String> mainList = nabor.getDetNames().stream()
                 .filter(x -> mainDetails.contains(x))
@@ -38,8 +53,8 @@ public class PaintGuideService {
                 .filter(x -> !mainDetails.contains(x))
                 .sorted()
                 .collect(Collectors.toList());
-        String main = showList(mainList);
-        String simple = showList(simpleList);
+        String main = GuideService.showList(mainList);
+        String simple = GuideService.showList(simpleList);
         String resultText = "-> Основные детали =\n" + main +
                 "\n-> Прочие детали =\n" + simple +
                 "\n-> Подготовительные работы = " + String.format("%.2f", nabor.getPrepareHours()) +
@@ -51,25 +66,25 @@ public class PaintGuideService {
         return resultText + "\n";
     }
 
-    private static String showList(List<String> detList) {
-        if(detList.size() == 0) {
-            return "";
-        }
-        StringBuilder builder = new StringBuilder();
-        for(int i = 0; i < detList.size() - 1; i++) {
-            String modifiedName = detList.get(i);
-            builder.append(modifiedName);
-            builder.append(";");
-            if((i+1) % 3 == 0) {
-                builder.append("\n");
-            } else {
-                if (modifiedName.length() < 25) {
-                    builder.append(" ".repeat(25 - modifiedName.length()));
-                }
-            }
-        }
-        builder.append(detList.get(detList.size() - 1));
-        return builder.toString();
-    }
+//    private static String showList(List<String> detList) {
+//        if(detList.size() == 0) {
+//            return "";
+//        }
+//        StringBuilder builder = new StringBuilder();
+//        for(int i = 0; i < detList.size() - 1; i++) {
+//            String modifiedName = detList.get(i);
+//            builder.append(modifiedName);
+//            builder.append(";");
+//            if((i+1) % 3 == 0) {
+//                builder.append("\n");
+//            } else {
+//                if (modifiedName.length() < 25) {
+//                    builder.append(" ".repeat(25 - modifiedName.length()));
+//                }
+//            }
+//        }
+//        builder.append(detList.get(detList.size() - 1));
+//        return builder.toString();
+//    }
 
 }

@@ -16,12 +16,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * контроллер для управления БД справочников
+ */
 @AllArgsConstructor
 @Controller
 @RequestMapping("/guide")
 public class GuideController {
     private final GuidesqlRepository guidesqlRepository;
 
+    /**
+     * основная страница
+     */
     @GetMapping
     public String show(Model model) {
         List<String> cars = guidesqlRepository.findAllNames();
@@ -29,6 +35,14 @@ public class GuideController {
         return "guidePage";
     }
 
+    /**
+     * добавление справочника из файла в БД
+     * @param fileName - имя файла
+     * @param fileText - содержимое файла
+     * @param model - модель
+     * @return - результат работы
+     * @throws IOException
+     */
     @PostMapping
     public String addGuide(String fileName, String fileText, Model model) throws IOException {
         String result;
@@ -46,6 +60,12 @@ public class GuideController {
         return "showResult";
     }
 
+    /**
+     * удаление справочника из БД
+     * @param name - имя справочника
+     * @param model - модель
+     * @return - результат работы
+     */
     @PostMapping("/delete")
     public String deleteGuide(String name, Model model) {
         Guidesql guidesql = guidesqlRepository.findByName(name).get();
@@ -55,6 +75,5 @@ public class GuideController {
         model.addAttribute("result", result);
         return "showResult";
     }
-
 
 }

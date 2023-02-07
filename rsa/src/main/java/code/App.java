@@ -30,6 +30,9 @@ import static code.guide.utils.MyConsts.XML_DIR;
 import static java.nio.file.Files.readString;
 import static java.nio.file.Files.writeString;
 
+/**
+ * основной класс для запуска программы
+ */
 public class App {
 
     public static void main(String[] args) throws Exception {

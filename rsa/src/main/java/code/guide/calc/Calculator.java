@@ -58,6 +58,11 @@ public class Calculator {
         return countMedian(list);
     }
 
+    /**
+     * расчет н/ч в случае коллизий для наборов з/ч - медианное значение
+     * @param list - список вариантов
+     * @return - количество н/ч
+     */
     public static double countMedian(Collection<Double> list) {
         double[] values = list.stream()
                 .sorted()
@@ -73,6 +78,11 @@ public class Calculator {
         }
     }
 
+    /**
+     * расчет н/ч в случае коллизий для наборов з/ч - минимальное из наиболее часто встречающихся
+     * @param list - список вариантов
+     * @return - количество н/ч
+     */
     public static double countMaxFrequency(Collection<Double> list) {
         return  list.stream()
                 .map(x -> String.valueOf(x))
@@ -90,12 +100,22 @@ public class Calculator {
                 .get();
     }
 
+    /**
+     * расчет н/ч в случае коллизий для наборов з/ч - минимальное значение
+     * @param list - список вариантов
+     * @return - количество н/ч
+     */
     public static double countMin(Collection<Double> list) {
         return list.stream()
                 .mapToDouble(x -> x)
                 .min().getAsDouble();
     }
 
+    /**
+     * расчет н/ч в случае коллизий для наборов з/ч - среднее значение
+     * @param list - список вариантов
+     * @return - количество н/ч
+     */
     public static double countAvr(Collection<Double> list) {
         return list.stream()
                 .mapToDouble(x -> x)

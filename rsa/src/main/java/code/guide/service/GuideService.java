@@ -12,9 +12,16 @@ import java.util.stream.Collectors;
 import static code.guide.calc.Calculator.countHoursForSingles;
 
 /**
- * showGuide() - перевести справочник в текстовый вид
+ * класс для работы со справочниками
  */
 public class GuideService {
+
+    /**
+     * перевести справочник в текстовый вид
+     * @param guide - справочник
+     * @param mainDetails - список основных деталей
+     * @return справочник в виде текста
+     */
     public static String showGuide(Guide guide, List<String> mainDetails) {
             StringBuilder builder = new StringBuilder();
             builder.append("Справочник для модели   " + guide.getName() + "\n");
@@ -46,6 +53,12 @@ public class GuideService {
             return builder.toString();
         }
 
+    /**
+     * вывести набор з/ч
+     * @param nabor - набор з/ч
+     * @param mainDetails - список основных деталей
+     * @return набор з/ч в виде текста с разбивкой на столбцы и строки
+     */
     private static String showNabor(Nabor nabor, List<String> mainDetails) {
         List<String> mainList = nabor.getDetNames().stream()
                 .filter(x -> mainDetails.contains(x))
@@ -63,7 +76,12 @@ public class GuideService {
         return resultText + "\n";
     }
 
-    private static String showList(List<String> detList) {
+    /**
+     * вывести список имен з/ч с разбивкой на столбцы и строки
+     * @param detList - список имен
+     * @return - список в виде текст с разбивкой на столбцы и строки
+     */
+    public static String showList(List<String> detList) {
         if(detList.size() == 0) {
             return "";
         }
@@ -84,6 +102,11 @@ public class GuideService {
         return builder.toString();
     }
 
+    /**
+     * показать справочник в упрощенном виде
+     * @param guide - справочник
+     * @return - упрощенный справочник в виде текста
+     */
     public static String showShortGuide(Guide guide) {
         StringBuilder builder = new StringBuilder();
         builder.append("номер набора (№)\tтрудоемкость\n");

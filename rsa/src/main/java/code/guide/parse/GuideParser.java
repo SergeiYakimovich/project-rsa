@@ -16,12 +16,16 @@ import java.util.List;
 import static code.guide.utils.MyConsts.GUIDE_SHORT_FILE;
 import static java.nio.file.Files.writeString;
 /**
- * readGuide() - получить из файла json справочник
- * writeGuide() - записать в файл json справочник
- * writeGuideAsString - записать в файл справочник как текст
+ * класс для парсинга справочников
  */
 public class GuideParser {
 
+    /**
+     * прочитать справочник из json файла
+     * @param fileName - имя файла
+     * @return - справочник
+     * @throws IOException
+     */
     public static Guide readGuide(String fileName) throws IOException {
         Reader myReader = new FileReader(fileName, StandardCharsets.UTF_8);
         ObjectMapper mapper = new ObjectMapper();
@@ -29,6 +33,12 @@ public class GuideParser {
         return guide;
     }
 
+    /**
+     * записать справочник в json файл
+     * @param fileName - имя файла
+     * @param guide - справочник
+     * @throws IOException
+     */
     public static void writeGuide(String fileName, Guide guide) throws IOException {
         Writer myWriter = new FileWriter(fileName, StandardCharsets.UTF_8);
         ObjectMapper mapper = new ObjectMapper();
@@ -36,6 +46,13 @@ public class GuideParser {
         System.out.println("\nСправочник в json файле - " + fileName);
     }
 
+    /**
+     * записать справочник в текстовый файл
+     * @param fileName - имя файла
+     * @param guide - справочник
+     * @param mainDetails - список имен основных деталей
+     * @throws IOException
+     */
     public static void writeGuideAsString(String fileName, Guide guide, List<String> mainDetails) throws IOException {
         writeString(Paths.get(fileName), GuideService.showGuide(guide, mainDetails), StandardCharsets.UTF_8);
         System.out.println("\nСправочник в текстовом файле - " + fileName);

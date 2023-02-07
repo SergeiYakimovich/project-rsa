@@ -18,12 +18,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * getOrderFromCsvFile() - получить з/н из Csv файла
- * getOrdersFromDirectory() - получить список з/н из директории
- * getOrderFromTextFile() - получить з/н из текстового файла
+ * класс для парсинга з/н
  */
 public class OrderParser {
 
+    /**
+     * получить з/н из Csv файла
+     * @param fileName - имя файла
+     * @param element - элемент для определения типа данных
+     * @return - з/н
+     * @throws Exception
+     */
     public static Order getOrderFromCsvFile (String fileName, CsvElement element) throws Exception {
         if(element.getClass() == CsvText.class) {
             Order order = getOrderFromTextFile(fileName);
@@ -47,6 +52,14 @@ public class OrderParser {
         return element.makeOrderFromCsvElement(csvElements, fileName);
     }
 
+    /**
+     * получить список з/н из директории
+     * @param dir - директория
+     * @param type - элемент для определения типа данных
+     * @return - список з/н
+     * @throws Exception
+     */
+
     public static List<Order> getOrdersFromDirectory(String dir, CsvElement type) throws Exception {
         List<Order> orders = new ArrayList<>();
         File[] files = new File(dir).listFiles();
@@ -66,6 +79,11 @@ public class OrderParser {
         return orders;
     }
 
+    /**
+     * получить з/н из текстового файла (1 позиция)
+     * @param fileName - имя файла
+     * @return - з/н
+     */
     public static Order getOrderFromTextFile(String fileName) {
         List<String> elements = new ArrayList<>();
         try {

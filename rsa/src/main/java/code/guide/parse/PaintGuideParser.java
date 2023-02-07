@@ -13,7 +13,17 @@ import java.util.List;
 import static code.guide.utils.MyConsts.GUIDE_SHORT_FILE;
 import static java.nio.file.Files.writeString;
 
+/**
+ * класс для парсинга справочников по покраске
+ */
 public class PaintGuideParser {
+    /**
+     * записать справочник в текстовый файл
+     * @param fileName - имя файла
+     * @param guide - справочник
+     * @param mainDetails - список имен основных деталей
+     * @throws IOException
+     */
     public static void writeGuideAsString(String fileName, PaintGuide guide, List<String> mainDetails) throws IOException {
         writeString(Paths.get(fileName), PaintGuideService.showPaintGuide(guide, mainDetails), StandardCharsets.UTF_8);
         System.out.println("\nСправочник в текстовом файле - " + fileName);

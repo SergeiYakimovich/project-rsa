@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * класс для описания деталей - 2 позиции
+ */
 @Getter
 @Setter
 @NoArgsConstructor

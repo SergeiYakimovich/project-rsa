@@ -18,10 +18,15 @@ import java.util.stream.Collectors;
 
 
 /**
- * makeUniqDetails() - посчитает уникальные детали c частотой появления в з/н и запишет в файл
- * analizeDetails() - посчитает важность каждой уникальной детали (средняя ошибка справочника без нее) и запишет в файл
+ * класс для создания списков деталей
  */
 public class DetailUtils {
+
+    /**
+     * создаст и запишет в файл список лишних з/ч (из всех и важных з/ч)
+     * @param orders - список з/н
+     * @throws Exception
+     */
     public static void makeNotMainFromMainAndAll(List<Order> orders) throws Exception {
         List<String> allDetailNames = makeUniqDetails(MyConsts.DET_FREQUENCY, orders).stream()
                 .sorted()
@@ -44,6 +49,13 @@ public class DetailUtils {
         System.out.println("\n\nНенужные детали в файле - " + MyConsts.DET_NOT_MAIN);
 
     }
+
+    /**
+     * посчитает важность каждой уникальной детали (средняя ошибка справочника без нее) и запишет в файл
+     * создаст файлы со списками важных и лишних деталей
+     * @param orders - список з/н
+     * @throws Exception
+     */
     public static void analizeDetails(List<Order> orders) throws Exception {
         List<String> notMainDetails;
         List<String> allDetailNames = makeUniqDetails(MyConsts.DET_FREQUENCY, orders);
@@ -88,6 +100,13 @@ public class DetailUtils {
         System.out.println("\nОсновные детали в файле - " + MyConsts.DET_MAIN);
     }
 
+    /**
+     * посчитает уникальные имена деталей c частотой появления в з/н и запишет в файл
+     * @param filename - имя файла для записи
+     * @param orders - список з/н
+     * @return - список уникальных имен з/ч
+     * @throws Exception
+     */
     public static List<String> makeUniqDetails(String filename, List<Order> orders) throws Exception {
         Map<String, Integer> det_Uniq = new HashMap<>();
         for(Order order : orders) {

@@ -3,10 +3,10 @@ package code.guide.utils;
 import java.util.List;
 
 /**
- * заданные имена файлов-каталогов, которые используются в программе
+ * константы, которые используются в программе (имена файлов-каталогов и пр.)
  */
 public class MyConsts {
-    public final static boolean IS_NAME_MAIN = true;
+    public static boolean IS_NAME_MAIN = false;
     public final static String BASE_URL = "../data/";
     public final static String ORDERS_DIR = BASE_URL + "order/";
     public final static String PAINT_ORDERS_DIR = BASE_URL + "paintorder/";
@@ -22,7 +22,7 @@ public class MyConsts {
     public final static String DET_MAIN = GUIDE_DIR + "det-main.csv";
     public final static String DET_MAIN_E = GUIDE_DIR + "det-main-E.csv";
     public final static String DET_NOT_MAIN = GUIDE_DIR + "det-not-main.csv";
-    public final static String GUIDE_FILE_NAME = "Kia-Rio-QB4";
+    public final static String GUIDE_FILE_NAME = "VW-Tuareg";
     public final static String GUIDE_FILE = LIB_DIR + GUIDE_FILE_NAME + ".json";
     public final static String GUIDE_TEXT_FILE = GUIDE_DIR + GUIDE_FILE_NAME + ".txt";
     public final static String PAINT_GUIDE_TEXT_FILE = PAINT_GUIDE_DIR + GUIDE_FILE_NAME + "-paint.txt";

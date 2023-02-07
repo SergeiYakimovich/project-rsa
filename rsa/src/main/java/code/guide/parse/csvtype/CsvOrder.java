@@ -11,6 +11,9 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * класс для описания з/н - 4 позиции
+ */
 @Getter
 @Setter
 @JsonPropertyOrder({ "number", "name", "count", "sum" })
@@ -20,7 +23,12 @@ public class CsvOrder extends CsvElement {
     private Double count;
     private Double sum;
 
-
+    /**
+     * создание з/н из списка элементов
+     * @param elements - список элементов
+     * @param fileName - имя файла
+     * @return - з/н
+     */
     @Override
     public Order makeOrderFromCsvElement(List<CsvElement> elements, String fileName) {
         Order result = OrderService.makeOrder(fileName);

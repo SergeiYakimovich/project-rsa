@@ -25,16 +25,21 @@ import static code.guide.utils.MyConsts.ORDERS_DIR;
 import static java.nio.file.Files.writeString;
 
 /**
- * convertOrderFromXmlToCsv() - получить Csv з/н из XML файла
- * convertOrdersFromDirectory() - получить список Csv з/н из директории c XML файлами
+ * класс для парсинга данных от страховых компаний
  */
 public class XmlParser {
     final  static Map<String, String> map = getMapNameNumber();
     static List<String> detMainE = Cli.getMainDetFromFile(MyConsts.DET_MAIN_E);
 
 
+    /**
+     * получить Csv з/н из файла страховой
+     * @param fileName - имя файла
+     * @return - true, если получилось распарсить и записать в csv файл
+     * @throws Exception
+     */
     public static boolean convertOrderFromXmlToCsv (String fileName) throws Exception {
-//        System.out.println(fileName);
+        System.out.println(fileName);
         StringBuffer buffer = new StringBuffer();
         buffer.append("УПР №;НАЗВАНИЕ;1.0;1.0\n");
 
@@ -63,6 +68,11 @@ public class XmlParser {
         return true;
     }
 
+    /**
+     * распарсить файлы из директории
+     * @param dir - директория
+     * @throws Exception
+     */
     public static void convertOrdersFromDirectory(String dir) throws Exception {
         File[] files = new File(dir).listFiles();
         int good = 0, bad = 0;
@@ -81,6 +91,12 @@ public class XmlParser {
         System.out.println("Сковертировано=" + good + " из " + files.length + " Ошибок=" + bad);
     }
 
+    /**
+     * получить данные по з/ч
+     * @param fileName - имя файла
+     * @return - список з/ч
+     * @throws IOException
+     */
     public static String findDetailsInXml(String fileName) throws IOException {
         String result = "";
         String str;
@@ -113,12 +129,14 @@ public class XmlParser {
                             uprNumber = normalizeUNumber(uprNumber);
                             int n = str.length() < 37 ? str.length() : 37;
                             String name = normalizeName(str.substring(16,n), uprNumber);
-                            String s = MyConsts.IS_NAME_MAIN ? name : uprNumber;
-                            if(detMainE.contains(s)) {
-                                uprNumber += " ЗАМЕНА";
-                                name += " ЗАМЕНА";
+                            if(name.length() > 1) {
+                                String s = MyConsts.IS_NAME_MAIN ? name : uprNumber;
+                                if(detMainE.contains(s)) {
+                                    uprNumber += " ЗАМЕНА";
+                                    name += " ЗАМЕНА";
+                                }
+                                result += uprNumber + ";" + name + ";" + "1.0" + ";" + "1.0" + "\n";
                             }
-                            result += uprNumber + ";" + name + ";" + "1.0" + ";" + "1.0" + "\n";
                         }
                     }
                     str = reader.readLine();
@@ -137,9 +155,11 @@ public class XmlParser {
                     String[] arr = str.split("[\\>\\<]");
                     String uprNumber = normalizeUNumber(arr[6].trim());
                     String name = normalizeName(arr[10], uprNumber);
-                    String s = MyConsts.IS_NAME_MAIN ? name : uprNumber;
-                    if(!result.contains(s + ";") && ! result.contains(s + " ЗАМЕНА;")) {
-                        result += uprNumber + ";" + name + ";2.0;2.0\n";
+                    if(name.length() > 1) {
+                        String s = MyConsts.IS_NAME_MAIN ? name : uprNumber;
+                        if(!result.contains(s + ";") && ! result.contains(s + " ЗАМЕНА;")) {
+                            result += uprNumber + ";" + name + ";2.0;2.0\n";
+                        }
                     }
                     str = str.substring(2);
                 }
@@ -151,6 +171,12 @@ public class XmlParser {
         return result;
     }
 
+    /**
+     * получить данные по работам
+     * @param fileName - имя файла
+     * @return - к-во н/ч
+     * @throws IOException
+     */
     public static Double findWorksInXml(String fileName) throws IOException {
         Double result = 0.0;
         String str;
@@ -166,11 +192,35 @@ public class XmlParser {
                 return result;
             }
             str = reader.readLine();
-            List<String> list = Arrays.stream(str.split(" "))
-                    .map(x -> x.trim())
-                    .filter(x -> !x.isEmpty())
-                    .collect(Collectors.toList());
-            result = Double.parseDouble(list.get(1)) / 10;
+            if(str.contains("ИТОГО КЛ.")) {
+                double d = 0;
+                while(str.contains("ИТОГО КЛ.")) {
+                    List<String> list = Arrays.stream(str.split(" "))
+                            .map(x -> x.trim())
+                            .filter(x -> !x.isEmpty())
+                            .collect(Collectors.toList());
+                    try {
+                        d += Double.parseDouble(list.get(3)) / 10;
+                    } catch (Exception e) {
+                        System.out.println("Ошибка конвертации " + fileName + " - " + list.get(1));
+                        return 0.0;
+                    }
+                    str = reader.readLine();
+                }
+                result = d;
+            } else {
+                List<String> list = Arrays.stream(str.split(" "))
+                        .map(x -> x.trim())
+                        .filter(x -> !x.isEmpty())
+                        .collect(Collectors.toList());
+                try {
+                    result = Double.parseDouble(list.get(1)) / 10;
+                } catch (Exception e) {
+                    System.out.println("Ошибка конвертации " + fileName + " - " + list.get(1));
+                    return 0.0;
+                }
+            }
+
 
             do{
                 str = reader.readLine();
@@ -182,24 +232,15 @@ public class XmlParser {
                         str = str.substring(n).trim();
                         String[] arr = str.split("\"");
                         String strHours = arr[0].trim();
-                        result -= Double.parseDouble(strHours) / 10;
+                        try {
+                            result -= Double.parseDouble(strHours) / 10;
+                        } catch (Exception e) {
+                            System.out.println("Ошибка конвертации " + fileName + " - " + strHours);
+                            return 0.0;
+                        }
                     }
                 }
             } while((str != null) && !str.contains("<EditedOutput><![CDATA"));
-
-//            if((str != null) && str.contains("<RepTyp>I")) { // в цикл выше перенести
-//                while(str.contains("<RepTyp>I")) {
-//                    int n = str.indexOf("<RepTyp>I") + 2;
-//                    str = str.substring(n).trim();
-//                    if(str.contains("<WuNet Unit=")) {
-//                        n = str.indexOf("Val=") + 5;
-//                        str = str.substring(n).trim();
-//                        String[] arr = str.split("\"");
-//                        String strHours = arr[0].trim();
-//                        result -= Double.parseDouble(strHours) / 10;
-//                    }
-//                }
-//            }
 
         } while(str != null);
 
@@ -222,7 +263,7 @@ public class XmlParser {
 
     public static String normalizeName(String name, String uprNumber) {
         String result;
-        if(name.length() == 1) {
+        if(name.length() <= 1) {
             System.out.println("!? : имя з/ч = " + name);
         }
         if(name.equals("EL")) {
@@ -233,6 +274,9 @@ public class XmlParser {
                     .replace("ПОЛИРОВ","")
                     .trim().toUpperCase();
         }
+        if(result.length() == 0) {
+            result = "UNKNOWN";
+        }
         return result;
     }
 
@@ -240,7 +284,7 @@ public class XmlParser {
         if(map.containsKey(number)) {
             return map.get(number);
         } else {
-            return "EL";
+            return "UNKNOWN";
         }
     }
 

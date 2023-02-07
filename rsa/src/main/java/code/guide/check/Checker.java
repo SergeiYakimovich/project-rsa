@@ -85,7 +85,11 @@ public class Checker {
         }
     }
 
-
+    /**
+     * расчет средней разницы в %
+     * @param list - список результатов
+     * @return среднюю разницу в %
+     */
     public static Double countAvrDiffInPercent(List<Result> list) {
         Double sum = 0.0;
         for(Result result : list) {
@@ -94,6 +98,11 @@ public class Checker {
         return sum / list.size();
     }
 
+    /**
+     * расчет средней разницы
+     * @param list - список результатов
+     * @return среднюю разницу
+     */
     private static Double countAvrDiff(List<Result> list) {
         Double sum = 0.0;
         for(Result result : list) {
@@ -101,6 +110,7 @@ public class Checker {
         }
         return sum / list.size();
     }
+
     public static Double countDiff(Double x1, Double x2)
     {   Double x = (1 - x1 / x2) * 100;
         return x < 0 ? -x : x;
