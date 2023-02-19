@@ -64,6 +64,9 @@ public class Calculator {
      * @return - количество н/ч
      */
     public static double countMedian(Collection<Double> list) {
+        if(list.size() == 0) {
+            return 0;
+        }
         double[] values = list.stream()
                 .sorted()
                 .mapToDouble(x -> x)

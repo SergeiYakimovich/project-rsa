@@ -1,5 +1,6 @@
 package code.guide.service;
 
+import code.guide.calc.Calculator;
 import code.guide.element.Guide;
 import code.guide.element.Nabor;
 import code.guide.utils.MyConsts;
@@ -31,7 +32,8 @@ public class GuideService {
             builder.append("_".repeat(70) + "\n");
             int i = 1;
             for(Nabor nabor : guide.getDetNaborSets()) {
-                builder.append("\n№" + i + " (" + nabor.getDetNames().size() + "шт.)\n" + showNabor(nabor, mainDetails));
+                builder.append("\n№" + i + " (" + nabor.getDetNames().size() + "шт.)\n");
+                builder.append(showNabor(nabor, mainDetails));
                 i++;
             }
 
@@ -44,9 +46,24 @@ public class GuideService {
                 if(mainDetails.contains(name)) {
                     Double hours = countHoursForSingles(nabor.getValue().values());
                     builder.append("\n№" + i + "\n-> Деталь = " + modifyName(name) + "\n-> Н/ч = "
-                            + String.format("%.2f", hours) + "\n");
-                    builder.append("-> Все варианты = " + nabor.getValue() + "\n");
+                            + String.format("%.2f", hours));
                     i++;
+                    if(MyConsts.MODEL_NAMES.size() == 0) {
+                        builder.append("\n-> Все варианты = " + nabor.getValue());
+                    } else {
+                        for (String modelName : MyConsts.MODEL_NAMES) {
+                            Map<String, Double> modelNameVariants = nabor.getValue().entrySet().stream()
+                                    .filter(x -> x.getKey().contains(modelName))
+                                    .collect(Collectors.toMap(x -> x.getKey(), y -> y.getValue()));
+                            if (modelNameVariants.size() > 0) {
+                                double h = Calculator.countHoursForNabor(modelNameVariants.values());
+                                builder.append("\nМодель = " + modelName);
+                                builder.append("   Н/ч = " + String.format("%.2f", h));
+                                builder.append("\nВарианты = " + modelNameVariants);
+                            }
+                        }
+                    }
+                    builder.append("\n");
                 }
             }
 
@@ -60,6 +77,7 @@ public class GuideService {
      * @return набор з/ч в виде текста с разбивкой на столбцы и строки
      */
     private static String showNabor(Nabor nabor, List<String> mainDetails) {
+        StringBuilder builder = new StringBuilder();
         List<String> mainList = nabor.getDetNames().stream()
                 .filter(x -> mainDetails.contains(x))
                 .sorted((x1,x2) -> MyConsts.IS_NAME_MAIN ? x1.compareTo(x2) :
@@ -70,10 +88,30 @@ public class GuideService {
                 .collect(Collectors.toList());
         String main = showList(mainList);
         String simple = showList(simpleList);
-        String resultText = "-> Основные детали =\n" + main + "\n-> Прочие детали =\n" + simple +
-                "\n-> Н/ч для набора = " + String.format("%.2f", nabor.getCount());
-        resultText += "\n-> Все варианты = " + nabor.getAllVariants();
-        return resultText + "\n";
+        if(main.length() != 0) {
+            builder.append("-> Основные детали =\n" + main);
+        }
+        if(simple.length() != 0) {
+            builder.append("\n-> Прочие детали =\n" + simple);
+        }
+        builder.append("\n-> Н/ч для набора = " + String.format("%.2f", nabor.getCount()));
+        if(MyConsts.MODEL_NAMES.size() == 0) {
+            builder.append("\n-> Все варианты = " + nabor.getAllVariants());
+        } else {
+            for(String modelName : MyConsts.MODEL_NAMES) {
+                Map<String, Double> modelNameVariants = nabor.getAllVariants().entrySet().stream()
+                        .filter(x -> x.getKey().contains(modelName))
+                        .collect(Collectors.toMap(x -> x.getKey(), y -> y.getValue()));
+                if (modelNameVariants.size() > 0) {
+                    builder.append("\nМодель = " + modelName);
+                    double hours = Calculator.countHoursForNabor(modelNameVariants.values());
+                    builder.append("   Н/ч = " + String.format("%.2f", hours));
+                    builder.append("\nВарианты = " + modelNameVariants);
+                }
+            }
+        }
+        builder.append("\n");
+        return builder.toString();
     }
 
     /**

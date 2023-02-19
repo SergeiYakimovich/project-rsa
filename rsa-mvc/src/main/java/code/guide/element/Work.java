@@ -5,14 +5,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * класс для описания работ
+ */
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Work {
 
-    private String name;
-    private Double count;
+    private String name; // имя
+    private Double count; // н/ч
 
     @Override
     public String toString() {
