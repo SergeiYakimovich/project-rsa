@@ -32,7 +32,7 @@ public class GuideService {
             builder.append("_".repeat(70) + "\n");
             int i = 1;
             for(Nabor nabor : guide.getDetNaborSets()) {
-                builder.append("\n№" + i + " (" + nabor.getDetNames().size() + "шт.)\n");
+                builder.append("\n№" + i + " (" + nabor.getDetNames().size() + "шт.);");
                 builder.append(showNabor(nabor, mainDetails));
                 i++;
             }
@@ -45,11 +45,11 @@ public class GuideService {
                 String name = nabor.getKey();
                 if(mainDetails.contains(name)) {
                     Double hours = countHoursForSingles(nabor.getValue().values());
-                    builder.append("\n№" + i + "\n-> Деталь = " + modifyName(name) + "\n-> Н/ч = "
+                    builder.append("\n№" + i + "\n;Деталь = " + modifyName(name) + "\n;Н/ч = "
                             + String.format("%.2f", hours));
                     i++;
                     if(MyConsts.MODEL_NAMES.size() == 0) {
-                        builder.append("\n-> Все варианты = " + nabor.getValue());
+                        builder.append("\n;Все варианты = " + nabor.getValue());
                     } else {
                         for (String modelName : MyConsts.MODEL_NAMES) {
                             Map<String, Double> modelNameVariants = nabor.getValue().entrySet().stream()
@@ -57,9 +57,9 @@ public class GuideService {
                                     .collect(Collectors.toMap(x -> x.getKey(), y -> y.getValue()));
                             if (modelNameVariants.size() > 0) {
                                 double h = Calculator.countHoursForNabor(modelNameVariants.values());
-                                builder.append("\nМодель = " + modelName);
+                                builder.append("\n;Модель = " + modelName);
                                 builder.append("   Н/ч = " + String.format("%.2f", h));
-                                builder.append("\nВарианты = " + modelNameVariants);
+                                builder.append("\n;Варианты = " + showMap(modelNameVariants));
                             }
                         }
                     }
@@ -86,32 +86,43 @@ public class GuideService {
         List<String> simpleList = nabor.getDetNames().stream()
                 .filter(x -> !mainDetails.contains(x))
                 .collect(Collectors.toList());
+        builder.append(" Н/ч для набора = " + String.format("%.2f", nabor.getCount()));
         String main = showList(mainList);
         String simple = showList(simpleList);
         if(main.length() != 0) {
-            builder.append("-> Основные детали =\n" + main);
+//            builder.append("-> Основные детали =\n" + main);
+            builder.append(main);
         }
         if(simple.length() != 0) {
-            builder.append("\n-> Прочие детали =\n" + simple);
+//            builder.append("\n-> Прочие детали =\n" + simple);
+            builder.append(simple);
         }
-        builder.append("\n-> Н/ч для набора = " + String.format("%.2f", nabor.getCount()));
+
         if(MyConsts.MODEL_NAMES.size() == 0) {
-            builder.append("\n-> Все варианты = " + nabor.getAllVariants());
+            builder.append("\n;Все варианты = " + nabor.getAllVariants());
         } else {
             for(String modelName : MyConsts.MODEL_NAMES) {
                 Map<String, Double> modelNameVariants = nabor.getAllVariants().entrySet().stream()
                         .filter(x -> x.getKey().contains(modelName))
                         .collect(Collectors.toMap(x -> x.getKey(), y -> y.getValue()));
                 if (modelNameVariants.size() > 0) {
-                    builder.append("\nМодель = " + modelName);
+                    builder.append("\n;Модель = " + modelName);
                     double hours = Calculator.countHoursForNabor(modelNameVariants.values());
                     builder.append("   Н/ч = " + String.format("%.2f", hours));
-                    builder.append("\nВарианты = " + modelNameVariants);
+                    builder.append(";Варианты = " + showMap(modelNameVariants));
                 }
             }
         }
         builder.append("\n");
         return builder.toString();
+    }
+
+    private static String showMap(Map<String, Double> modelNameVariants) {
+        StringBuilder builder = new StringBuilder();
+        for(Map.Entry<String, Double> item : modelNameVariants.entrySet()) {
+            builder.append(item.getKey() + "=" + item.getValue() + ";");
+        }
+        return builder.substring(0, builder.length() - 1);
     }
 
     /**
@@ -124,19 +135,18 @@ public class GuideService {
             return "";
         }
         StringBuilder builder = new StringBuilder();
-        for(int i = 0; i < detList.size() - 1; i++) {
-            String modifiedName = modifyName(detList.get(i));
-            builder.append(modifiedName);
-            builder.append(";");
-            if((i+1) % 3 == 0) {
-                builder.append("\n");
-            } else {
-                if (modifiedName.length() < 25) {
-                    builder.append(" ".repeat(25 - modifiedName.length()));
-                }
-            }
+        for(String item : detList) {
+            String modifiedName = modifyName(item);
+            builder.append("\n" + modifiedName);
+//            if((i+1) % 3 == 0) {
+//                builder.append("\n");
+//            } else {
+//                if (modifiedName.length() < 25) {
+//                    builder.append(" ".repeat(25 - modifiedName.length()));
+//                }
+//            }
         }
-        builder.append(modifyName(detList.get(detList.size() - 1)));
+//        builder.append(modifyName(detList.get(detList.size() - 1)));
         return builder.toString();
     }
 

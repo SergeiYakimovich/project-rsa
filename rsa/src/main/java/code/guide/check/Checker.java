@@ -3,10 +3,16 @@ package code.guide.check;
 import code.guide.calc.Calculator;
 import code.guide.element.Guide;
 import code.guide.element.Order;
+import code.guide.utils.MyConsts;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.nio.file.Files.writeString;
 
 /**
  * Класс для проверки результатов расчетов
@@ -51,25 +57,28 @@ public class Checker {
     /**
      * вывод результата проверки
      * @param list - список объектов класса Result с результатами
-     * @param number - количество худших результатов для показа
      */
-    public static void showResults(List<Result> list, int number) {
-        System.out.println("\nПроверено на " + list.size() + " з/н");
-        System.out.println("Средняя точность в % = " + String.format("%.1f", 100 - countAvrDiffInPercent(list)) + "%");
-//        System.out.println("Медианное отклонение в % = "
-//                + String.format("%.1f", list.get(list.size() / 2).getDiffInPercent()) + "%");
+    public static void showResults(List<Result> list) throws IOException {
+        StringBuilder builder = new StringBuilder();
+        builder.append("\nПроверено на " + list.size() + " з/н");
+        builder.append("\nСредняя точность в % = " + String.format("%.1f", 100 - countAvrDiffInPercent(list)) + "%");
+        builder.append("\nМедианное отклонение в % = "
+                + String.format("%.1f", list.get(list.size() / 2).getDiffInPercent()) + "%");
         int countBad = (int) list.stream()
                 .filter(x -> x.getDiff() > 0.01)
                 .count();
-        System.out.println("С ошибками = " + countBad + " из " + list.size() + " з/н ("
+        builder.append("\nС ошибками = " + countBad + " из " + list.size() + " з/н ("
                 + String.format("%.1f", (double) countBad / list.size() * 100) + "%)");
-        System.out.println("Точно посчитано = " + (list.size() - countBad) + " из " + list.size() + " з/н ("
+        builder.append("\nТочно посчитано = " + (list.size() - countBad) + " из " + list.size() + " з/н ("
                 + String.format("%.1f", (double) (list.size() - countBad) / list.size() * 100) + "%)");
-        System.out.println("Максимальное отклонение :");
-        int n = list.size() > number ? number : list.size();
-        for(int i = 0; i < n; i++) {
-            System.out.println(list.get(i).toString());
+        builder.append("\nМаксимальное отклонение :");
+        int i = 0;
+        while (i < list.size() && list.get(i).getDiff() > 0.01) {
+            builder.append("\n" + list.get(i).toString());
+            i++;
         }
+        System.out.println("\nРезультаты проверки в файле - " + MyConsts.GUIDE_CHECK_FILE);
+        writeString(Paths.get(MyConsts.GUIDE_CHECK_FILE), builder, StandardCharsets.UTF_8);
     }
 
     /**

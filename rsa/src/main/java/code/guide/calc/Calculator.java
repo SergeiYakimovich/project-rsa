@@ -46,7 +46,11 @@ public class Calculator {
      * @return - количество н/ч
      */
     public static double countHoursForSingles(Collection<Double> list) {
-        return countMedian(list);
+        if(list.size() > 5) {
+            return countMaxFrequency(list);
+        } else {
+            return countMedian(list);
+        }
     }
 
     /**
@@ -55,7 +59,11 @@ public class Calculator {
      * @return - количество н/ч
      */
     public static double countHoursForNabor(Collection<Double> list) {
-        return countMedian(list);
+        if(list.size() > 5) {
+            return countMaxFrequency(list);
+        } else {
+            return countMedian(list);
+        }
     }
 
     /**
