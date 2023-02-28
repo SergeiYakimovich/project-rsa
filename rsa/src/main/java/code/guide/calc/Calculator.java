@@ -46,7 +46,13 @@ public class Calculator {
      * @return - количество н/ч
      */
     public static double countHoursForSingles(Collection<Double> list) {
-        if(list.size() > 5) {
+        long max = list.stream()
+                .map(x -> String.valueOf(x))
+                .collect(Collectors.groupingBy(x -> x, LinkedHashMap::new, Collectors.counting()))
+                .values().stream()
+                .max(Long::compareTo)
+                .get();
+        if(list.size() > 5 && max > 1) {
             return countMaxFrequency(list);
         } else {
             return countMedian(list);
@@ -59,7 +65,13 @@ public class Calculator {
      * @return - количество н/ч
      */
     public static double countHoursForNabor(Collection<Double> list) {
-        if(list.size() > 5) {
+        long max = list.stream()
+                .map(x -> String.valueOf(x))
+                .collect(Collectors.groupingBy(x -> x, LinkedHashMap::new, Collectors.counting()))
+                .values().stream()
+                .max(Long::compareTo)
+                .get();
+        if(list.size() > 5 && max > 1) {
             return countMaxFrequency(list);
         } else {
             return countMedian(list);

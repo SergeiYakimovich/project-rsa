@@ -67,10 +67,10 @@ public class Checker {
         int countBad = (int) list.stream()
                 .filter(x -> x.getDiff() > 0.01)
                 .count();
-        builder.append("\nС ошибками = " + countBad + " из " + list.size() + " з/н ("
-                + String.format("%.1f", (double) countBad / list.size() * 100) + "%)");
         builder.append("\nТочно посчитано = " + (list.size() - countBad) + " из " + list.size() + " з/н ("
                 + String.format("%.1f", (double) (list.size() - countBad) / list.size() * 100) + "%)");
+        builder.append("\nНеточно = " + countBad + " из " + list.size() + " з/н ("
+                + String.format("%.1f", (double) countBad / list.size() * 100) + "%)");
         builder.append("\nМаксимальное отклонение :");
         int i = 0;
         while (i < list.size() && list.get(i).getDiff() > 0.01) {

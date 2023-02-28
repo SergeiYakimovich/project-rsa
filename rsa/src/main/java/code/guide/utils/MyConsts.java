@@ -23,9 +23,10 @@ public class MyConsts {
     public final static String DET_MAIN_E = GUIDE_DIR + "det-main-E.csv";
     public final static String DET_NOT_MAIN = GUIDE_DIR + "det-not-main.csv";
     public final static String GUIDE_FILE_NAME = "KIA-RIO-moda";
+//    public final static List<String> MODEL_NAMES = List.of("RIO", "SPORTAGE");
 //    public final static List<String> MODEL_NAMES =
 //            List.of("RIO", "SPORTAGE", "CAMRY", "LAND CRUISER", "POLO", "TOUAREG");
-    public final static List<String> MODEL_NAMES = List.of("DE", "DX", "QB", "(YB FB)_1S", "(YB FB)_67");
+    public final static List<String> MODEL_NAMES = List.of("DE", "DX", "QB", "YB FB");
 //    public final static List<String> MODEL_NAMES = List.of("RIO", "POLO");
     public final static String GUIDE_FILE = LIB_DIR + GUIDE_FILE_NAME + ".json";
     public final static String GUIDE_TEXT_FILE = GUIDE_DIR + GUIDE_FILE_NAME + ".txt";
