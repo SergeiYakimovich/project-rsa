@@ -1,6 +1,7 @@
 package code.guide.utils;
 
 import code.guide.element.Order;
+import code.guide.parse.DetailsParser;
 import code.guide.parse.OrderParser;
 import code.guide.parse.csvtype.CsvOrder;
 import code.guide.service.GuideService;
@@ -80,7 +81,7 @@ public class OrderUtils {
         Map<Range, Set<String>> rangeMap = new TreeMap<>();
         NameUprNumberUtils.makeMapNameNumber();
         List<Order> orders = OrderParser.getOrdersFromDirectory(MyConsts.ORDERS_DIR, new CsvOrder());
-        List<String> notMainDetails = Cli.getNotMainDet();
+        List<String> notMainDetails = DetailsParser.getNotMainDet();
         for(Order order : orders) {
             double hours = order.getWorksCount();
             List<String> detNames = order.getDetails().stream()

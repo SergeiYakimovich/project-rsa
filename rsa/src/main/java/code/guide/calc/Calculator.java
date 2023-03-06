@@ -46,17 +46,7 @@ public class Calculator {
      * @return - количество н/ч
      */
     public static double countHoursForSingles(Collection<Double> list) {
-        long max = list.stream()
-                .map(x -> String.valueOf(x))
-                .collect(Collectors.groupingBy(x -> x, LinkedHashMap::new, Collectors.counting()))
-                .values().stream()
-                .max(Long::compareTo)
-                .get();
-        if(list.size() > 5 && max > 1) {
-            return countMaxFrequency(list);
-        } else {
-            return countMedian(list);
-        }
+        return countModa(list);
     }
 
     /**
@@ -65,21 +55,32 @@ public class Calculator {
      * @return - количество н/ч
      */
     public static double countHoursForNabor(Collection<Double> list) {
+        return countModa(list);
+    }
+
+    /**
+     * расчет н/ч в случае коллизий - сложная мода
+     * @param list
+     * @return
+     */
+    public static double countModa(Collection<Double> list) {
+        if(list.size() <= 5) {
+            return countMedian(list);
+        }
         long max = list.stream()
                 .map(x -> String.valueOf(x))
                 .collect(Collectors.groupingBy(x -> x, LinkedHashMap::new, Collectors.counting()))
                 .values().stream()
                 .max(Long::compareTo)
                 .get();
-        if(list.size() > 5 && max > 1) {
+        if(max > 1) {
             return countMaxFrequency(list);
         } else {
             return countMedian(list);
         }
     }
-
     /**
-     * расчет н/ч в случае коллизий для наборов з/ч - медианное значение
+     * расчет н/ч в случае коллизий - медианное значение
      * @param list - список вариантов
      * @return - количество н/ч
      */
@@ -102,7 +103,7 @@ public class Calculator {
     }
 
     /**
-     * расчет н/ч в случае коллизий для наборов з/ч - минимальное из наиболее часто встречающихся
+     * расчет н/ч в случае коллизий - минимальное из наиболее часто встречающихся
      * @param list - список вариантов
      * @return - количество н/ч
      */
@@ -124,7 +125,7 @@ public class Calculator {
     }
 
     /**
-     * расчет н/ч в случае коллизий для наборов з/ч - минимальное значение
+     * расчет н/ч в случае коллизий - минимальное значение
      * @param list - список вариантов
      * @return - количество н/ч
      */
@@ -135,7 +136,7 @@ public class Calculator {
     }
 
     /**
-     * расчет н/ч в случае коллизий для наборов з/ч - среднее значение
+     * расчет н/ч в случае коллизий - среднее значение
      * @param list - список вариантов
      * @return - количество н/ч
      */

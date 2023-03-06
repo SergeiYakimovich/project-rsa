@@ -60,6 +60,12 @@ public class CsvOrder extends CsvElement {
         return result;
     }
 
+    /**
+     * нормализация управляющих номеров - замена на правильные
+     * @param fileName - имя файла=имяз/н
+     * @param number - управляющий номер
+     * @return - правильный управляющий номер
+     */
     public static String normalizeNumber(String fileName, String number) {
         if(fileName.contains("RIO")) {
 

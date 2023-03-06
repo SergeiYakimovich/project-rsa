@@ -16,7 +16,7 @@ import java.util.List;
 import static code.guide.utils.MyConsts.GUIDE_SHORT_FILE;
 import static java.nio.file.Files.writeString;
 /**
- * класс для парсинга справочников
+ * класс для чтения-записи справочников
  */
 public class GuideParser {
 
@@ -53,7 +53,7 @@ public class GuideParser {
      * @param mainDetails - список имен основных деталей
      * @throws IOException
      */
-    public static void writeGuideAsString(String fileName, Guide guide, List<String> mainDetails) throws IOException {
+    public static void writeGuideAsText(String fileName, Guide guide, List<String> mainDetails) throws IOException {
         writeString(Paths.get(fileName), GuideService.showGuide(guide, mainDetails), StandardCharsets.UTF_8);
         System.out.println("\nСправочник в текстовом файле - " + fileName);
 //        writeString(Paths.get(GUIDE_SHORT_FILE), GuideService.showShortGuide(guide), StandardCharsets.UTF_8);

@@ -29,7 +29,7 @@ import static java.nio.file.Files.writeString;
  */
 public class XmlParser {
     final  static Map<String, String> map = getMapNameNumber();
-    static List<String> detMainE = Cli.getMainDetFromFile(MyConsts.DET_MAIN_E);
+    static List<String> detMainE = DetailsParser.getMainDetFromFile(MyConsts.DET_MAIN_E);
 
 
     /**

@@ -32,9 +32,11 @@ public class GuideService {
             builder.append("_".repeat(70) + "\n");
             int i = 1;
             for(Nabor nabor : guide.getDetNaborSets()) {
-                builder.append("\n№" + i + " (" + nabor.getDetNames().size() + "шт.);");
-                builder.append(showNabor(nabor, mainDetails));
-                i++;
+                if(nabor.getAllVariants().size() > MyConsts.MIN_COUNT) {
+                    builder.append("\n№" + i + " (" + nabor.getDetNames().size() + "шт.);");
+                    builder.append(showNabor(nabor, mainDetails));
+                    i++;
+                }
             }
 
             builder.append("\n\n\n" + "_".repeat(70));
@@ -43,7 +45,7 @@ public class GuideService {
             i = 1;
             for(Map.Entry<String, Map<String,Double>> nabor : guide.getDetSingles().entrySet()) {
                 String name = nabor.getKey();
-                if(mainDetails.contains(name)) {
+                if(mainDetails.contains(name) && nabor.getValue().size() > MyConsts.MIN_COUNT) {
                     Double hours = countHoursForSingles(nabor.getValue().values());
                     builder.append("\n№" + i + "\n;Деталь = " + modifyName(name) + "\n;Н/ч = "
                             + String.format("%.2f", hours));

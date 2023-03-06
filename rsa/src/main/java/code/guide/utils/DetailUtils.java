@@ -31,7 +31,7 @@ public class DetailUtils {
         List<String> allDetailNames = makeUniqDetails(MyConsts.DET_FREQUENCY, orders).stream()
                 .sorted()
                 .collect(Collectors.toList());
-        List<String> mainDetails = Cli.getMainDets();
+        List<String> mainDetails = DetailsParser.getMainDets();
         List<String> notMainDetails = new ArrayList<>();
 
         for(String detail : allDetailNames) {

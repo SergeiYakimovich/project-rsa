@@ -35,6 +35,12 @@ dependencies {
 
 }
 
+compileJava {
+  options.release = 16
+  options.encoding = 'UTF-8'
+}
+
+
 test {
   useJUnitPlatform()
 }

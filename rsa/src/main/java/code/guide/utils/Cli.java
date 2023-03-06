@@ -57,8 +57,8 @@ public class Cli {
                 makeAndCheck(mainDetails, notMainDetails, GUIDE_FILE_100, GUIDE_TEXT_FILE_100);
                 break;
             case 5 : //        Создание своей модели (с учетом важных и не нужных деталей)
-                mainDetails = getMainDets();
-                notMainDetails = getNotMainDet();
+                mainDetails = DetailsParser.getMainDets();
+                notMainDetails = DetailsParser.getNotMainDet();
                 makeAndCheck(mainDetails, notMainDetails, GUIDE_FILE, GUIDE_TEXT_FILE);
                 break;
             case 6 : //        Проверка на тестовых запросах (тип - текст с разделителями [,;\n])
@@ -123,65 +123,10 @@ public class Cli {
         Guide guide = GuideUtils.makeGuide(orders, mainDetails, notMainDetails, guideFile);
         NameUprNumberUtils.makeMapNameNumber();
 //        GuideParser.writeGuide(guideFile, guide);
-        GuideParser.writeGuideAsString(guideTextFile, guide, mainDetails);
+        GuideParser.writeGuideAsText(guideTextFile, guide, mainDetails);
         List<Result> results = Checker.checkOrders(guide, orders);
         Checker.showResults(results);
     }
 
-    /**
-     * получение списка важных деталей из 2-х файлов (DET_MAIN и DET_MAIN_E)
-     * @return - список важных деталей
-     */
-    public static List<String> getMainDets() {
-        List<String> mainDetails = new ArrayList<>();
-
-        List<String> list1 = getMainDetFromFile(MyConsts.DET_MAIN);
-        mainDetails.addAll(list1);
-
-        List<String> list2 = getMainDetFromFile(MyConsts.DET_MAIN_E);
-        list2 = list2.stream()
-                .map(x -> x + " ЗАМЕНА")
-                .collect(Collectors.toList());
-        mainDetails.addAll(list2);
-
-
-        return mainDetails;
-    }
-
-    /**
-     * получение списка важных деталей из файла
-     * @param fileName - имя файла
-     * @return - список важных деталей
-     */
-    public static List<String> getMainDetFromFile(String fileName) {
-        List<CsvDetail> elements;
-
-        try {
-            elements = DetailsParser.readDetNameNumber(fileName);
-        } catch (IOException e) {
-            System.out.println("Ошибка чтения из файла " + fileName);
-            return new ArrayList<>();
-        }
-
-        return elements.stream()
-                .map(x -> MyConsts.IS_NAME_MAIN ? x.getName() : x.getCount())
-                .sorted()
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * получение списка лишних деталей из файла DET_NOT_MAIN
-     * @return - список лишних деталей
-     */
-    public static List<String> getNotMainDet() {
-        List<String> notMainDetails;
-        try {
-            notMainDetails = DetailsParser.readDetNames(MyConsts.DET_NOT_MAIN);
-        } catch (IOException e) {
-            System.out.println("Ошибка чтения из файла " + MyConsts.DET_NOT_MAIN);
-            return new ArrayList<>();
-        }
-        return notMainDetails;
-    }
 
 }

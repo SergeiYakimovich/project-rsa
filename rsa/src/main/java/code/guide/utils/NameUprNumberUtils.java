@@ -16,10 +16,11 @@ import java.util.stream.Collectors;
  * класс для работы с именами и управляющими номерами з/ч
  */
 public class NameUprNumberUtils {
+    // мапа с именами и управляющими номерами
     public static Map<String, String> mapNameNumber = new HashMap<>();
 
     /**
-     * создание мап с именами и управляющими номерами из списков важных деталей
+     * создание мапы с именами и управляющими номерами из списков важных деталей
      * @throws IOException
      */
     public static void makeMapNameNumber() throws IOException {

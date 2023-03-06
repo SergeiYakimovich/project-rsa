@@ -1,6 +1,7 @@
 package code.guide.parse;
 
 import code.guide.parse.csvtype.CsvDetail;
+import code.guide.utils.MyConsts;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -110,6 +112,61 @@ public class DetailsParser {
     public static void writeDetOnlyNames(String fileName, List<String> elements ) throws IOException {
         String text = elements.stream().collect(Collectors.joining("\n"));
         writeString(Paths.get(fileName), text, StandardCharsets.UTF_8);
+    }
+    /**
+     * получение списка важных деталей из 2-х файлов (DET_MAIN и DET_MAIN_E)
+     * @return - список важных деталей
+     */
+    public static List<String> getMainDets() {
+        List<String> mainDetails = new ArrayList<>();
+
+        List<String> list1 = getMainDetFromFile(MyConsts.DET_MAIN);
+        mainDetails.addAll(list1);
+
+        List<String> list2 = getMainDetFromFile(MyConsts.DET_MAIN_E);
+        list2 = list2.stream()
+                .map(x -> x + " ЗАМЕНА")
+                .collect(Collectors.toList());
+        mainDetails.addAll(list2);
+
+
+        return mainDetails;
+    }
+
+    /**
+     * получение списка важных деталей из файла
+     * @param fileName - имя файла
+     * @return - список важных деталей
+     */
+    public static List<String> getMainDetFromFile(String fileName) {
+        List<CsvDetail> elements;
+
+        try {
+            elements = DetailsParser.readDetNameNumber(fileName);
+        } catch (IOException e) {
+            System.out.println("Ошибка чтения из файла " + fileName);
+            return new ArrayList<>();
+        }
+
+        return elements.stream()
+                .map(x -> MyConsts.IS_NAME_MAIN ? x.getName() : x.getCount())
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * получение списка лишних деталей из файла DET_NOT_MAIN
+     * @return - список лишних деталей
+     */
+    public static List<String> getNotMainDet() {
+        List<String> notMainDetails;
+        try {
+            notMainDetails = DetailsParser.readDetNames(MyConsts.DET_NOT_MAIN);
+        } catch (IOException e) {
+            System.out.println("Ошибка чтения из файла " + MyConsts.DET_NOT_MAIN);
+            return new ArrayList<>();
+        }
+        return notMainDetails;
     }
 
 }
