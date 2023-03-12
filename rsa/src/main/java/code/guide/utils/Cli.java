@@ -63,7 +63,8 @@ public class Cli {
                 break;
             case 6 : //        Проверка на тестовых запросах (тип - текст с разделителями [,;\n])
                 guide = GuideParser.readGuide(GUIDE_FILE);
-                orders = OrderParser.getOrdersFromDirectory(TEST_DIR, new CsvText());
+//                orders = OrderParser.getOrdersFromDirectory(TEST_DIR, new CsvText());
+                orders = OrderParser.getOrdersFromDirectory(TEST_DIR, new CsvOrder());
                 Checker.countTestOrders(guide,orders);
                 break;
             case 7 : //     Проверка соответствия имен и управляющих номеров
@@ -122,7 +123,7 @@ public class Cli {
         List<Order> orders = OrderParser.getOrdersFromDirectory(MyConsts.ORDERS_DIR, new CsvOrder());
         Guide guide = GuideUtils.makeGuide(orders, mainDetails, notMainDetails, guideFile);
         NameUprNumberUtils.makeMapNameNumber();
-//        GuideParser.writeGuide(guideFile, guide);
+        GuideParser.writeGuide(guideFile, guide);
         GuideParser.writeGuideAsText(guideTextFile, guide, mainDetails);
         List<Result> results = Checker.checkOrders(guide, orders);
         Checker.showResults(results);
