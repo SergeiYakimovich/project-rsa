@@ -40,16 +40,17 @@ public class MyConsts {
     public final static String DET_NOT_MAIN = GUIDE_DIR + "det-not-main.csv";
 
     // имя справочника
-    public final static String GUIDE_FILE_NAME = "CAMRY";
+    public final static String GUIDE_FILE_NAME = "POLO";
 
     // Вывод в справочнике наборов размером больше, чем MIN_COUNT (0=все)
     public static final int MIN_COUNT = 0;
 
     // список марок-моделей для выделения в справочнике
-    public final static List<String> MODEL_NAMES = List.of("_CR_", "_A1_", "_97_", "_90_", "_39_");
-//    public final static List<String> MODEL_NAMES = List.of();
-//    public final static List<String> MODEL_NAMES = List.of("DE", "DX", "QB", "YB FB");
+    public final static List<String> MODEL_NAMES = List.of("_PR_", "_PE_", "(CK)");
 //    public final static List<String> MODEL_NAMES = List.of("RIO", "POLO");
+//    public final static List<String> MODEL_NAMES = List.of("DE", "DX", "QB", "YB FB");
+//    public final static List<String> MODEL_NAMES = List.of("_CR_", "_A1_", "_97_", "_90_", "_39_");
+//    public final static List<String> MODEL_NAMES = List.of();
 //    public final static List<String> MODEL_NAMES = List.of("RIO", "SPORTAGE");
 //    public final static List<String> MODEL_NAMES = List.of("RIO", "SPORTAGE", "CAMRY", "LAND CRUISER", "POLO", "TOUAREG");
 

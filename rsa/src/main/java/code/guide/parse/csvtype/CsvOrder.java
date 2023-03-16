@@ -68,14 +68,16 @@ public class CsvOrder extends CsvElement {
      * @return - правильный управляющий номер
      */
     public static String normalizeNumber(String fileName, String number) {
-        if(fileName.contains("RIO")) {
-            return UprNumberNormilizer.normalizeNumberRIO(fileName, number);
-        }
-        if(fileName.contains("CAMRY")) {
-            return UprNumberNormilizer.normalizeNumberCAMRY(fileName, number);
-        }
+        return UprNumberNormilizer.normalizeNumberRioPolo(fileName, number);
 
-        return number;
+//        if(fileName.contains("RIO")) {
+//            return UprNumberNormilizer.normalizeNumberRIO(fileName, number);
+//        }
+//        if(fileName.contains("CAMRY")) {
+//            return UprNumberNormilizer.normalizeNumberCAMRY(fileName, number);
+//        }
+//
+//        return number;
     }
 
 }

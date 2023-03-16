@@ -123,7 +123,7 @@ public class Cli {
         List<Order> orders = OrderParser.getOrdersFromDirectory(MyConsts.ORDERS_DIR, new CsvOrder());
         Guide guide = GuideUtils.makeGuide(orders, mainDetails, notMainDetails, guideFile);
         NameUprNumberUtils.makeMapNameNumber();
-        GuideParser.writeGuide(guideFile, guide);
+//        GuideParser.writeGuide(guideFile, guide);
         GuideParser.writeGuideAsText(guideTextFile, guide, mainDetails);
         List<Result> results = Checker.checkOrders(guide, orders);
         Checker.showResults(results);
